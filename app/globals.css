@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+}
+
+:root {
+  /* Green neon yellow color palette from Coolors.co */
+  --background: 0 0% 100%;
+  --foreground: 164 100% 25%;
+  --card: 0 0% 100%;
+  --card-foreground: 164 100% 25%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 164 100% 25%;
+  --primary: 95 100% 36%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 64 100% 62%;
+  --secondary-foreground: 164 100% 25%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 60 100% 50%;
+  --accent-foreground: 164 100% 25%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 137 55% 41%;
+  --success-foreground: 0 0% 100%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 95 100% 36%;
+  --radius: 0.5rem;
+
+  --chart-1: 95 100% 36%;
+  --chart-2: 137 55% 41%;
+  --chart-3: 64 100% 62%;
+  --chart-4: 60 100% 75%;
+  --chart-5: 89 100% 40%;
+}
+
+.dark {
+  --background: 164 100% 10%;
+  --foreground: 60 100% 75%;
+  --card: 164 100% 13%;
+  --card-foreground: 60 100% 75%;
+  --popover: 164 100% 13%;
+  --popover-foreground: 60 100% 75%;
+  --primary: 95 100% 50%;
+  --primary-foreground: 164 100% 10%;
+  --secondary: 64 100% 62%;
+  --secondary-foreground: 164 100% 10%;
+  --muted: 164 50% 20%;
+  --muted-foreground: 64 50% 70%;
+  --accent: 60 100% 50%;
+  --accent-foreground: 164 100% 10%;
+  --destructive: 0 62.8% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 137 55% 50%;
+  --success-foreground: 164 100% 10%;
+  --border: 164 50% 20%;
+  --input: 164 50% 20%;
+  --ring: 95 100% 50%;
+
+  --chart-1: 95 100% 50%;
+  --chart-2: 137 55% 50%;
+  --chart-3: 64 100% 62%;
+  --chart-4: 60 100% 75%;
+  --chart-5: 89 100% 50%;
+}
