@@ -20,7 +20,7 @@ export default function Home() {
     <div className="container mx-auto px-4 py-8">
       {/* Hero Section */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold mb-2 text-foreground">
           Professional Skills Market Rankings
         </h1>
         <p className="text-muted-foreground text-lg">

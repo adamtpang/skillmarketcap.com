@@ -13,62 +13,68 @@
 
 :root {
   /* Green neon yellow color palette from Coolors.co */
-  --background: 0 0% 100%;
-  --foreground: 164 100% 25%;
-  --card: 0 0% 100%;
-  --card-foreground: 164 100% 25%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 164 100% 25%;
-  --primary: 95 100% 36%;
+  /* https://coolors.co/007f5f-2b9348-55a630-80b918-aacc00-bfd200-d4d700-dddf00-eeef20-ffff3f */
+  /* Hex values: #007f5f #2b9348 #55a630 #80b918 #aacc00 #bfd200 #d4d700 #dddf00 #eeef20 #ffff3f */
+
+  --background: 60 100% 97%;        /* Soft yellow/cream #fffef0 */
+  --foreground: 164 100% 20%;       /* Dark teal #007f5f (darker for better contrast) */
+  --card: 60 40% 98%;
+  --card-foreground: 164 100% 20%;
+  --popover: 60 40% 98%;
+  --popover-foreground: 164 100% 20%;
+  --primary: 95 100% 36%;           /* Bright lime #80b918 */
   --primary-foreground: 0 0% 100%;
-  --secondary: 64 100% 62%;
-  --secondary-foreground: 164 100% 25%;
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 60 100% 50%;
-  --accent-foreground: 164 100% 25%;
-  --destructive: 0 84.2% 60.2%;
+  --secondary: 64 100% 35%;         /* Yellow #d4d700 (much darker for contrast) */
+  --secondary-foreground: 0 0% 100%;
+  --muted: 60 30% 92%;
+  --muted-foreground: 164 50% 30%;  /* Darker for better readability */
+  --accent: 60 100% 50%;            /* Pure yellow #ffff3f */
+  --accent-foreground: 164 100% 20%;
+  --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-  --success: 137 55% 41%;
+  --success: 137 55% 41%;           /* Green #2b9348 */
   --success-foreground: 0 0% 100%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
+  --border: 60 20% 80%;
+  --input: 60 20% 90%;
   --ring: 95 100% 36%;
   --radius: 0.5rem;
 
-  --chart-1: 95 100% 36%;
-  --chart-2: 137 55% 41%;
-  --chart-3: 64 100% 62%;
-  --chart-4: 60 100% 75%;
-  --chart-5: 89 100% 40%;
+  /* Chart colors */
+  --chart-1: 95 100% 36%;   /* #80b918 - Bright lime */
+  --chart-2: 137 55% 41%;   /* #2b9348 - Green */
+  --chart-3: 64 100% 35%;   /* #d4d700 - Yellow */
+  --chart-4: 60 100% 80%;   /* #eeef20 - Neon yellow */
+  --chart-5: 89 100% 40%;   /* #aacc00 - Yellow-green */
 }
 
 .dark {
-  --background: 164 100% 10%;
-  --foreground: 60 100% 75%;
-  --card: 164 100% 13%;
-  --card-foreground: 60 100% 75%;
-  --popover: 164 100% 13%;
-  --popover-foreground: 60 100% 75%;
-  --primary: 95 100% 50%;
-  --primary-foreground: 164 100% 10%;
-  --secondary: 64 100% 62%;
-  --secondary-foreground: 164 100% 10%;
-  --muted: 164 50% 20%;
-  --muted-foreground: 64 50% 70%;
-  --accent: 60 100% 50%;
-  --accent-foreground: 164 100% 10%;
-  --destructive: 0 62.8% 50%;
+  /* Dark mode with teal background and yellow text */
+  --background: 164 100% 5%;        /* Very dark teal #001a14 */
+  --foreground: 60 100% 85%;        /* Bright neon yellow #eeef20 */
+  --card: 164 100% 8%;
+  --card-foreground: 60 100% 85%;
+  --popover: 164 100% 8%;
+  --popover-foreground: 60 100% 85%;
+  --primary: 95 100% 55%;           /* Brighter lime for dark mode */
+  --primary-foreground: 164 100% 5%;
+  --secondary: 64 100% 55%;         /* Brighter yellow for dark mode */
+  --secondary-foreground: 164 100% 5%;
+  --muted: 164 40% 15%;
+  --muted-foreground: 64 60% 70%;
+  --accent: 60 100% 62%;
+  --accent-foreground: 164 100% 5%;
+  --destructive: 0 62% 50%;
   --destructive-foreground: 0 0% 100%;
   --success: 137 55% 50%;
-  --success-foreground: 164 100% 10%;
-  --border: 164 50% 20%;
-  --input: 164 50% 20%;
-  --ring: 95 100% 50%;
+  --success-foreground: 164 100% 5%;
+  --border: 164 40% 20%;
+  --input: 164 40% 20%;
+  --ring: 95 100% 55%;
 
-  --chart-1: 95 100% 50%;
+  /* Chart colors for dark mode */
+  --chart-1: 95 100% 55%;
   --chart-2: 137 55% 50%;
-  --chart-3: 64 100% 62%;
-  --chart-4: 60 100% 75%;
+  --chart-3: 64 100% 55%;
+  --chart-4: 60 100% 80%;
   --chart-5: 89 100% 50%;
 }
