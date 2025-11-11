@@ -6,7 +6,6 @@ import { Skill, SortColumn, SortDirection } from "@/lib/types";
 import { formatSalary, formatNumber, formatPercentage, cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ArrowUp, ArrowDown, TrendingUp, TrendingDown, Minus } from "lucide-react";
-import { Sparklines, SparklinesLine } from "recharts";
 
 interface SkillTableProps {
   skills: Skill[];
