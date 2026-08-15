@@ -1,22 +1,9 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  async redirects() {
-    return [
-      {
-        source: "/:path*",
-        has: [{ type: "host", value: "skillmarketcap.com" }],
-        destination: "https://skill.supply/skills",
-        permanent: true,
-      },
-      {
-        source: "/:path*",
-        has: [{ type: "host", value: "www.skillmarketcap.com" }],
-        destination: "https://skill.supply/skills",
-        permanent: true,
-      },
-    ];
-  },
-};
+// No redirects here. The old host-based rules that lived in skill.supply's
+// config (skillmarketcap.com -> skill.supply/skills) died with the split;
+// this project IS skillmarketcap.com now, and carrying those rules over
+// would have redirected the site's own domain into a loop.
+const nextConfig: NextConfig = {};
 
 export default nextConfig;
