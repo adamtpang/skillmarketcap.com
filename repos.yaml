@@ -1,0 +1,24 @@
+# repos.yaml v0 — see github.com/adamtpang/repo-protocol
+repo: skillmarketcap.com
+is: A live demand ranking of skills, computed hourly from real public job boards. The demand side of the talent market, at the domain Adam already owned.
+url: https://skillmarketcap.com
+cluster: talent-stack
+ranks: skills
+
+provides:
+  - id: skill-demand-index
+    what: the classifier and hourly ranking, 15 skill definitions scored against every live role on the scanned boards
+    at: lib/skills.ts
+  - id: verified-ats-boards
+    what: the verified provider plus board-slug map for scanning public Greenhouse and Ashby job boards, no scraping
+    at: lib/jobs.ts
+
+stack: [next, react, tailwind]
+
+kin:
+  - repo: skill.supply
+    why: extracted from skill.supply on 2026-08-15, where this lived at /skills (that route now redirects here). skill.supply is the supply side, packaging and placing a person; this is the demand side, measuring what the market asks for. Both read the same public ATS boards, and lib/companies.ts plus lib/jobs.ts are duplicated across the two on purpose, documented in HANDOFF_FROM_SKILL_SUPPLY.md.
+  - repo: company.university
+    why: company.university's curricula answer "how do I learn this"; this repo answers "which skill is worth learning right now", the demand signal its board should be pointed at. The trifecta's academy and its market readout.
+
+canon: ECOSYSTEM.md (the Talent Trifecta constitution, lives in skill.supply)
