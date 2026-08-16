@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   },
   description:
     "A live demand ranking of skills, computed hourly from the real roles published on public job boards. Directional, sourced, and honest about what it does not measure.",
+  alternates: {
+    canonical: "https://skillmarketcap.com",
+  },
   openGraph: {
     title: "Skill Market Cap",
     description:
@@ -36,6 +39,32 @@ export const metadata: Metadata = {
   },
 };
 
+// Real entities only. Organization.sameAs points at skill.supply, the only
+// other official property linked from this site (nav, footer, and CTA in
+// app/page.tsx): same author, same "Talent Trifecta" thesis, documented as
+// kin in HANDOFF_FROM_SKILL_SUPPLY.md. No SearchAction: this site has no
+// search feature to describe.
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": "https://skillmarketcap.com/#organization",
+    name: "Skill Market Cap",
+    url: "https://skillmarketcap.com",
+    sameAs: ["https://skill.supply"],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://skillmarketcap.com/#website",
+    name: "Skill Market Cap",
+    url: "https://skillmarketcap.com",
+    description:
+      "A live demand ranking of skills, computed hourly from the real roles published on public job boards.",
+    publisher: { "@id": "https://skillmarketcap.com/#organization" },
+  },
+];
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -47,6 +76,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         {children}
         <Analytics />
       </body>
