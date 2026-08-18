@@ -18,6 +18,10 @@ export type SkillSignal = {
   matchingRoles: number;
   shareOfRoles: number;
   companiesHiring: number;
+  /** Median of employer-disclosed salary-band midpoints in USD, null when no matching posting discloses. */
+  medianDisclosedUsd: number | null;
+  /** How many matching postings disclose a band. The denominator is matchingRoles. */
+  disclosedCount: number;
   examples: Array<Pick<Job, "title" | "url"> & { company: string }>;
 };
 
@@ -147,6 +151,14 @@ function roleText(job: Job): string {
   return [job.title, job.team].filter(Boolean).join(" ");
 }
 
+/** Median of an already-sorted list. Null on empty: no disclosure, no number. */
+function median(sorted: number[]): number | null {
+  if (sorted.length === 0) return null;
+  const mid = Math.floor(sorted.length / 2);
+  const upper = sorted[mid] ?? 0;
+  return sorted.length % 2 === 1 ? upper : Math.round(((sorted[mid - 1] ?? 0) + upper) / 2);
+}
+
 function matchesSkill(skill: SkillDefinition, job: Job): boolean {
   const role = roleText(job);
   if (skill.source === "role") return skill.pattern.test(role);
@@ -154,7 +166,8 @@ function matchesSkill(skill: SkillDefinition, job: Job): boolean {
   return skill.pattern.test([role, job.description].filter(Boolean).join(" "));
 }
 
-async function buildSkillMarket(): Promise<SkillMarketSnapshot> {
+/** Exported for the offline aggregation script; the site reads fetchSkillMarket. */
+export async function buildSkillMarket(): Promise<SkillMarketSnapshot> {
   const boards = await Promise.all(
     COMPANIES.map(async (company) => ({
       company: company.name,
@@ -185,16 +198,25 @@ async function buildSkillMarket(): Promise<SkillMarketSnapshot> {
   );
 
   const signals = rawSignals
-    .map(({ skill, matches, companiesHiring, examples }): SkillSignal => ({
-      slug: skill.slug,
-      name: skill.name,
-      category: skill.category,
-      demandScore: maximum === 0 ? 0 : Math.round((matches.length / maximum) * 100),
-      matchingRoles: matches.length,
-      shareOfRoles: jobs.length === 0 ? 0 : Math.round((matches.length / jobs.length) * 100),
-      companiesHiring,
-      examples,
-    }))
+    .map(({ skill, matches, companiesHiring, examples }): SkillSignal => {
+      const disclosedMidpoints = matches
+        .map((job) => job.compUsd)
+        .filter((value): value is number => typeof value === "number")
+        .toSorted((a, b) => a - b);
+
+      return {
+        slug: skill.slug,
+        name: skill.name,
+        category: skill.category,
+        demandScore: maximum === 0 ? 0 : Math.round((matches.length / maximum) * 100),
+        matchingRoles: matches.length,
+        shareOfRoles: jobs.length === 0 ? 0 : Math.round((matches.length / jobs.length) * 100),
+        companiesHiring,
+        medianDisclosedUsd: median(disclosedMidpoints),
+        disclosedCount: disclosedMidpoints.length,
+        examples,
+      };
+    })
     .filter((signal) => signal.matchingRoles > 0)
     .toSorted((a, b) => b.matchingRoles - a.matchingRoles || a.name.localeCompare(b.name));
 
@@ -208,7 +230,7 @@ async function buildSkillMarket(): Promise<SkillMarketSnapshot> {
 }
 
 /** Cache the compact computed snapshot, never the large source-board payloads. */
-export const fetchSkillMarket = unstable_cache(buildSkillMarket, ["skill-market-v2"], {
+export const fetchSkillMarket = unstable_cache(buildSkillMarket, ["skill-market-v3"], {
   revalidate: 3600,
   tags: ["skill-market"],
 });

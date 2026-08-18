@@ -81,6 +81,20 @@ export default async function HomePage() {
                       {skill.matchingRoles.toLocaleString()} matching roles across{" "}
                       {skill.companiesHiring} {skill.companiesHiring === 1 ? "company" : "companies"}
                     </p>
+                    {skill.medianDisclosedUsd !== null ? (
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        <span className="font-medium text-foreground">
+                          {formatCompUsd(skill.medianDisclosedUsd)} median disclosed
+                        </span>{" "}
+                        <span className="font-mono text-[10px]">
+                          ({skill.disclosedCount} of {skill.matchingRoles} postings disclose)
+                        </span>
+                      </p>
+                    ) : (
+                      <p className="mt-1 font-mono text-[10px] tracking-wide text-muted-foreground uppercase">
+                        no disclosed comp
+                      </p>
+                    )}
                     {skill.examples.length > 0 && (
                       <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
                         {skill.examples.map((job) => (
@@ -141,8 +155,9 @@ export default async function HomePage() {
                 directional sample, not the whole labor market.
               </p>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                We do not show salary or 7-day trends yet. Those require source-backed compensation
-                data and stored daily snapshots. Invented precision would be worse than no number.
+                Pay values are medians of employer-disclosed salary-band midpoints from public ATS
+                APIs, mostly US postings under pay-transparency laws. Skills with no disclosed bands
+                show no number: invented precision would be worse than no number.
               </p>
             </div>
           </div>
@@ -183,6 +198,10 @@ export default async function HomePage() {
       </footer>
     </div>
   );
+}
+
+function formatCompUsd(value: number): string {
+  return `$${Math.round(value / 1000)}K`;
 }
 
 function Metric({ label, value }: { label: string; value: string }) {

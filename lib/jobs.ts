@@ -6,6 +6,7 @@
  */
 
 import { unstable_cache } from "next/cache";
+import { ashbyCompMidpointUsd, textCompMidpointUsd } from "./comp";
 
 export type Job = {
   id: string;
@@ -15,6 +16,8 @@ export type Job = {
   team: string | null;
   /** Plain-text requirements when the public board exposes them. Server-side only today. */
   description?: string | null;
+  /** Midpoint of the employer-disclosed USD base salary band, null when none is disclosed. */
+  compUsd?: number | null;
 };
 
 type Board = { provider: "greenhouse" | "ashby"; board: string };
@@ -41,7 +44,7 @@ async function loadJobs(slug: string, includeDescriptions: boolean): Promise<Job
   const url =
     board.provider === "greenhouse"
       ? `https://boards-api.greenhouse.io/v1/boards/${board.board}/jobs${includeDescriptions ? "?content=true" : ""}`
-      : `https://api.ashbyhq.com/posting-api/job-board/${board.board}`;
+      : `https://api.ashbyhq.com/posting-api/job-board/${board.board}?includeCompensation=true`;
 
   try {
     const res = await fetch(url, {
@@ -93,6 +96,7 @@ function normalize(
       location: loc?.name ?? null,
       team: null,
       description: includeDescriptions ? plainText(j.content) : null,
+      compUsd: includeDescriptions ? textCompMidpointUsd(str(j.content)) : null,
     };
   }
 
@@ -110,6 +114,7 @@ function normalize(
     description: includeDescriptions
       ? plainText(j.descriptionPlain) ?? plainText(j.descriptionHtml)
       : null,
+    compUsd: ashbyCompMidpointUsd(j),
   };
 }
 
