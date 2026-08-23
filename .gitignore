@@ -77,3 +77,5 @@ worker/worker.log
 /scripts/verified-people.json
 /scripts/warmth.json
 /scripts/issues-found.json
+
+.vercel
