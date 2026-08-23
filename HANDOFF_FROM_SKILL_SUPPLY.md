@@ -1,16 +1,19 @@
 # Handoff: Skill Market Cap, a standalone site
 
 Written 2026-08-15 by the skill.supply session that performed the split.
-**Updated 2026-08-22** with everything that shipped since. Read this
-before changing anything here.
+**Updated 2026-08-22** with everything that shipped since, and
+**2026-08-23** with the hosting separation. Read this before changing
+anything here.
 
 ## Current state, one paragraph
 
-Live at **https://skillmarketcap.com**, deployed from this repo, git
-connected. It ranks skill demand from live public ATS data and, since
+Live at **https://skillmarketcap.com**, on its own Vercel project
+(`prj_2yXHllqBI2pcKSIvXoV3v2wM709O`), its own GitHub repo, and both of
+its hostnames. It ranks skill demand from live public ATS data and, since
 2026-08-22, shows **median employer-disclosed compensation per skill**
 next to each rank. It does no LLM work, has no database, and persists
-nothing. Latest commit: `d9fae66` (the comp layer). Build is clean under
+nothing. Last change to the page itself: `d9fae66` (the comp layer);
+commits after it are docs and infrastructure. Build is clean under
 TypeScript strict; all routes prerender static.
 
 ## Why this repo exists
@@ -96,6 +99,45 @@ Standing reminders:
 - The Vercel buy API cannot see third-party-registered domains you
   already own. Check RDAP and `vercel domains ls` before concluding
   anything about a .com.
+
+## The hosting separation, finished 2026-08-23
+
+The split was code-complete on 2026-08-15 but not infrastructure
+complete. Three things were still wrong or missing, and all three are
+now fixed. If any of this ever looks broken again, this is the map.
+
+**1. `www` was still serving skill.supply.** The apex was correctly
+pointed at this project, but `www.skillmarketcap.com` was still attached
+to the **skill.supply** Vercel project, so anyone hitting the www
+hostname got skill.supply's homepage under this domain's name. Moved
+with `vercel domains add www.skillmarketcap.com skillmarketcap.com
+--force`, which detaches from the old project and reattaches in one
+step. Both hostnames now serve this site.
+
+Not yet done: www serves the site directly rather than redirecting to
+the apex. It is harmless because `app/layout.tsx` emits an absolute
+canonical pointing at the apex, but a 308 on the domain's Vercel
+settings would be tidier.
+
+**2. The GitHub repo had been deleted.** `adamtpang/skillmarketcap.com`
+(repo id 1093197631, branch `master`) held an older, unrelated
+incarnation of this site and was deleted at some point. The Vercel
+project's git link still pointed at that dead repo id, so nothing ever
+deployed from git. Every production deploy since the split was a dirty
+local CLI upload, and the code existed in exactly one place: Adam's
+machine.
+
+Fixed by creating a fresh public `adamtpang/skillmarketcap.com` from
+this local history, pushing `main`, and reconnecting the project
+(`vercel git disconnect` then `vercel git connect`, because a plain
+connect saw the matching org/repo name and thought the dead link was
+still valid).
+
+**3. `.vercel` was not ignored.** Now is.
+
+**Standing consequence:** `main` on GitHub is production. Push to deploy.
+Do not go back to `vercel --prod` uploads from a dirty tree, which is
+what produced a live site that no commit could reproduce.
 
 ## What came across in the split
 
