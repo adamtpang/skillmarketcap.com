@@ -12,14 +12,18 @@ Scans the public applicant-tracking boards (Greenhouse and Ashby posting
 APIs, no scraping) of the companies in `lib/companies.ts`, classifies
 every live role against 15 skill definitions, and ranks them by how often
 they appear. The most-mentioned skill scores 100; the rest are indexed
-against it.
+against it. Each skill also shows the median midpoint of usable
+employer-disclosed annual USD salary bands and the disclosure count behind
+it.
 
 ## What it deliberately does not do
 
-- **No salary numbers.** That needs source-backed compensation data.
+- **No estimated salary numbers.** Missing, ambiguous, hourly, and non-USD
+  bands are left out rather than inferred.
 - **No 7-day trends.** That needs stored daily snapshots, which means a
   database this does not have yet.
-- Invented precision would be worse than no number, so neither is faked.
+- Invented precision would be worse than no number, so neither pay nor
+  trends are faked.
 
 ## Stack
 

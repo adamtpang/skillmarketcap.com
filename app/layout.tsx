@@ -55,6 +55,14 @@ const jsonLd = [
   },
   {
     "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": "https://skillmarketcap.com/#operator",
+    name: "Adam Pang",
+    url: "https://adampang.com",
+    sameAs: ["https://github.com/adamtpang"],
+  },
+  {
+    "@context": "https://schema.org",
     "@type": "WebSite",
     "@id": "https://skillmarketcap.com/#website",
     name: "Skill Market Cap",
@@ -62,6 +70,7 @@ const jsonLd = [
     description:
       "A live demand ranking of skills, computed hourly from the real roles published on public job boards.",
     publisher: { "@id": "https://skillmarketcap.com/#organization" },
+    creator: { "@id": "https://skillmarketcap.com/#operator" },
   },
 ];
 
