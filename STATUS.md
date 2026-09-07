@@ -21,8 +21,9 @@ captures MOM monthly SGD occupational survey wages separately. It stores
 dated source responses, hashes, failure states and normalized posting data.
 Salary observations preserve their original bounds, currency and period.
 Ambiguous currencies, missing bounds and conflicting tiers are excluded.
-Source failures pause public rankings; a failed request cannot masquerade
-as zero demand. Functional job query parameters survive deduplication.
+Source failures reject cache refreshes, preserving the last complete
+snapshot with its capture time. A failed request cannot masquerade as zero
+demand. Functional job query parameters survive deduplication.
 Daily GitHub Actions capture is configured at 02:23 UTC with 90-day artifact
 retention and integrity verification by reprocessing raw source responses.
 There is no published trend series or automatic public consumption of

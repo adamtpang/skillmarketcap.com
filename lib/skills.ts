@@ -2,6 +2,7 @@ import { SKILLS, matchesSkill, median, roleText, type SkillDefinition } from "./
 import { unstable_cache } from "next/cache";
 import { COMPANIES } from "./companies";
 import { loadBoard, type Job } from "./jobs";
+import { requireCompleteMarket } from './complete-market';
 
 export type SkillSignal = {
   slug: string;
@@ -98,8 +99,8 @@ export async function buildSkillMarket(): Promise<SkillMarketSnapshot> {
   };
 }
 
-/** Cache the compact computed snapshot, never the large source-board payloads. */
-export const fetchSkillMarket = unstable_cache(buildSkillMarket, ["skill-market-v9"], {
+/** Rejected refreshes retain the previous successful Next.js cache entry. */
+export const fetchSkillMarket = unstable_cache(async () => requireCompleteMarket(await buildSkillMarket()), ["skill-market-complete-v1"], {
   revalidate: 3600,
   tags: ["skill-market"],
 });

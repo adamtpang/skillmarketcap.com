@@ -15,7 +15,7 @@ export default async function DataPage() {
     intro="We measure postings and advertised compensation from public employer APIs. We do not estimate a standalone price for a skill, predict your earnings or treat a course as proof of job readiness.">
     <section>
       <h2 className="text-xl font-semibold">Current source coverage</h2>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Snapshot computed {market.asOf} (UTC). The site cache refreshes on demand after one hour. Failed sources pause all rankings; a failed request is never counted as zero demand.</p>
+      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Last complete snapshot computed {market.asOf} (UTC). The site cache refreshes on demand after one hour. If a refresh fails, the previous complete snapshot remains visible with its original time. The source statuses below belong to that snapshot, not a continuous health check. A failed request is never counted as zero demand.</p>
       <ul className="mt-4 divide-y divide-border rounded-xl border border-border px-4">
         {market.sources.map(source=><li key={source.company} className="py-3">
           <h3 className="font-semibold">{source.company}</h3>

@@ -91,8 +91,11 @@ review for ambiguity.
 
 The public ranking also distinguishes source failures from successful
 empty boards. If any expected board fails or contains malformed listed
-postings, rankings are paused with a source warning until a later refresh
-succeeds. Partial coverage is never presented as a comparable ranking.
+postings, the refresh rejects instead of replacing a complete cached sample.
+Next.js retains the last successful snapshot, labelled with its capture
+time, and retries revalidation on subsequent requests. A first build with
+incomplete sources fails rather than deploying an incomplete ranking.
+Partial coverage is never presented as a comparable ranking.
 
 `npm test`, `npm run lint`, and `npm run build` validate the application.
 

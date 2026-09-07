@@ -11,6 +11,8 @@ export default async function HomePage() {
     month: "short",
     day: "numeric",
     year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
     timeZone: "UTC",
   }).format(new Date(market.asOf));
 
@@ -21,7 +23,7 @@ export default async function HomePage() {
       <main className="flex-1 pb-16">
         <section className="pt-12 pb-8 sm:pt-16">
           <div className="font-mono text-xs font-medium tracking-[0.14em] text-muted-foreground uppercase">
-            Public job data, refreshed hourly
+            Public job data, checked hourly
           </div>
           <h1 className="mt-2 max-w-2xl text-3xl font-semibold tracking-tighter text-balance sm:text-4xl">
             See what the market is asking for
@@ -64,7 +66,7 @@ export default async function HomePage() {
                 Skills mentioned in hiring
               </h2>
             </div>
-            <div className="font-mono text-xs text-muted-foreground">Refreshed {refreshed}</div>
+            <div className="font-mono text-xs text-muted-foreground">Last complete sample: {refreshed} UTC</div>
           </div>
 
           {market.signals.length > 0 ? (
@@ -169,6 +171,7 @@ export default async function HomePage() {
                 These figures describe roles mentioning a skill, not the standalone value of that skill.
                 Locations and seniority levels are pooled; they are not personalized salary estimates.
                 Ambiguous currencies, incomplete ranges and conflicting location tiers are excluded.
+                If a source refresh fails, the previous complete sample stays visible with its capture time.
               </p>
               <a href="/data" className="mt-2 inline-flex min-h-11 items-center rounded text-sm font-medium text-brand underline underline-offset-4">Inspect data sources and capture history</a>
             </div>
