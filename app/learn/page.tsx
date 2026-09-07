@@ -41,9 +41,9 @@ export default async function LearnPage() {
         <a className={linkStyle} href={path.credentialUrl} target="_blank" rel="noopener noreferrer">Read provider credential requirements</a>
         <h3 className="mt-3 font-semibold">Work to demonstrate</h3>
         <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{path.proof} This is a suggested portfolio exercise, not an issued assessment.</p>
-        {signal && <div className="mt-3">
+        {signal && <div className="mt-3 flex flex-col items-start gap-1">
           <h3 className="font-semibold">Check the actual requirements</h3>
-          {signal.examples.map(job=><a key={job.url} className={`${linkStyle} block break-words`} href={job.url} target="_blank" rel="noopener noreferrer">{job.title} at {job.company}</a>)}
+          {signal.examples.map(job=><a key={job.url} className={`${linkStyle} break-words`} href={job.url} target="_blank" rel="noopener noreferrer">{job.title} at {job.company}</a>)}
         </div>}
       </section>;
     })}

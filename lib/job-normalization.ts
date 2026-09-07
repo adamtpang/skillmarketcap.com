@@ -76,4 +76,3 @@ function plainText(v: unknown): string | null {
     .replace(/\s+/g, " ")
     .trim();
 }
-

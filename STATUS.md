@@ -11,9 +11,9 @@ is implemented: medians of usable employer-disclosed annual USD salary-band
 midpoints with disclosure counts. Claims that compensation is absent are
 stale. The figures describe role bundles, not independent skill prices.
 
-Local changes tighten technical title classification, decode Greenhouse
+Released changes tighten technical title classification, decode Greenhouse
 markup before matching, and require annual salary context for text ranges.
-These changes are not deployed. Keyword classification remains a heuristic
+Keyword classification remains a heuristic
 and does not distinguish required from preferred skills.
 
 The local source pipeline adds a separately labelled OpenAI cohort and
@@ -43,8 +43,14 @@ product quality. Public Shapeable improvement remains deployment-dependent.
 Local fixes include readable small text, larger link targets, visible
 keyboard focus, reduced-motion support and complete job titles.
 Detailed historical local evidence is in sales/quality-2026-09-06/RECEIPT.md.
-Adam approved commit, push and deployment on 2026-09-07. The earlier gate
-is lifted for this release; current production results need a new receipt.
+Adam approved commit, push and deployment on 2026-09-07. Release 4a7b5d6
+deployed successfully through the production Git integration. Fresh public
+Lightmark and Shapeable homepage audits both scored 100/100 on that date.
+All 20 tests, lint and the production build passed. The initial hosted
+capture succeeded and verified 2,329 postings against 11 source receipts:
+https://github.com/adamtpang/skillmarketcap.com/actions/runs/34090389614.
+The daily workflow is active; its first run's evidence artifact expires
+on 2026-12-06. Retention is rolling, not an indefinite historical database.
 
 Binding constraint: verify that sourced requirements and assessments change
 a useful matching or learning decision. Data volume alone does not prove

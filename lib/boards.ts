@@ -12,4 +12,3 @@ export const BOARDS: Record<string, Board> = {
   saronic: { provider: "ashby", board: "saronic" },
   apptronik: { provider: "greenhouse", board: "apptronik" },
 };
-

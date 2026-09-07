@@ -149,4 +149,3 @@ export function matchesSkill(skill: SkillDefinition, job: Job): boolean {
   if (!isTechnicalRole(job)) return false;
   return skill.pattern.test([role, job.description].filter(Boolean).join(" "));
 }
-
