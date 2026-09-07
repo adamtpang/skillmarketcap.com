@@ -40,8 +40,9 @@ export default function AboutPage() {
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           The ranking is a directional sample, not the whole labor market and not a historical
           trend. One role can match more than one skill. Compensation coverage is uneven because
-          disclosure depends on the employer and posting. The project has no database of daily
-          snapshots, no public API, and no claim that demand alone determines a person&apos;s fit.
+          disclosure depends on the employer and posting. Daily evidence captures are retained
+          in the project&apos;s workflow artifacts for a limited period. There is no public API
+          and no claim that demand alone determines a person&apos;s fit.
         </p>
       </section>
 

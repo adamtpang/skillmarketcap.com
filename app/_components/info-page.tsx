@@ -14,7 +14,7 @@ export function InfoPage({ eyebrow, title, intro, children }: InfoPageProps) {
       <SiteHeader />
       <main className="flex-1 pb-16 pt-12 sm:pt-16">
         <header className="max-w-2xl">
-          <div className="font-mono text-[11px] font-medium tracking-[0.14em] text-muted-foreground uppercase">
+          <div className="font-mono text-xs font-medium tracking-[0.14em] text-muted-foreground uppercase">
             {eyebrow}
           </div>
           <h1 className="mt-2 text-3xl font-semibold tracking-tighter text-balance sm:text-4xl">

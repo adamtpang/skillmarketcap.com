@@ -1,5 +1,6 @@
 import { ArrowRight, ArrowUpRight, CircleHelp } from "lucide-react";
 import { fetchSkillMarket } from "@/lib/skills";
+import { learningForSkill } from "@/lib/learning";
 import { SiteFooter, SiteHeader } from "./_components/site-chrome";
 
 export default async function HomePage() {
@@ -19,27 +20,27 @@ export default async function HomePage() {
 
       <main className="flex-1 pb-16">
         <section className="pt-12 pb-8 sm:pt-16">
-          <div className="font-mono text-[11px] font-medium tracking-[0.14em] text-muted-foreground uppercase">
-            Live demand, computed hourly
+          <div className="font-mono text-xs font-medium tracking-[0.14em] text-muted-foreground uppercase">
+            Public job data, refreshed hourly
           </div>
           <h1 className="mt-2 max-w-2xl text-3xl font-semibold tracking-tighter text-balance sm:text-4xl">
             See what the market is asking for
           </h1>
           <p className="mt-4 max-w-2xl text-[0.95rem] leading-relaxed text-muted-foreground">
             A demand snapshot built from the actual roles published by high-potential companies on
-            their public job boards. Use it to choose what to prove, not what course to buy.
+            their public job boards. Explore relevant courses, then build work that proves the skill.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-4">
             <a
               href="#rankings-title"
-              className="inline-flex h-10 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors outline-none hover:bg-primary/80 focus-visible:ring-3 focus-visible:ring-ring/50"
+              className="inline-flex h-11 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors outline-none hover:bg-primary/80 focus-visible:ring-3 focus-visible:ring-ring/50"
             >
               Start with the live ranking
               <ArrowRight className="size-4" aria-hidden />
             </a>
             <a
               href="#methodology"
-              className="rounded text-sm font-medium text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50"
+              className="inline-flex min-h-11 items-center rounded text-sm font-medium text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50"
             >
               Read the methodology
             </a>
@@ -56,14 +57,14 @@ export default async function HomePage() {
         <section className="mt-8" aria-labelledby="rankings-title">
           <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
             <div>
-              <div className="font-mono text-[11px] font-medium tracking-[0.14em] text-muted-foreground uppercase">
+              <div className="font-mono text-xs font-medium tracking-[0.14em] text-muted-foreground uppercase">
                 Live rankings
               </div>
               <h2 id="rankings-title" className="mt-1 text-xl font-semibold tracking-tight">
-                Skills by explicit hiring demand
+                Skills mentioned in hiring
               </h2>
             </div>
-            <div className="font-mono text-[11px] text-muted-foreground">Refreshed {refreshed}</div>
+            <div className="font-mono text-xs text-muted-foreground">Refreshed {refreshed}</div>
           </div>
 
           {market.signals.length > 0 ? (
@@ -76,7 +77,7 @@ export default async function HomePage() {
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
                       <h3 className="font-semibold tracking-tight">{skill.name}</h3>
-                      <div className="font-mono text-[10px] tracking-wide text-muted-foreground uppercase">
+                      <div className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
                         {skill.category}
                       </div>
                     </div>
@@ -87,14 +88,14 @@ export default async function HomePage() {
                     {skill.medianDisclosedUsd !== null ? (
                       <div className="mt-1 text-xs text-muted-foreground">
                         <span className="font-medium text-foreground">
-                          {formatCompUsd(skill.medianDisclosedUsd)} median disclosed
+                          {formatCompUsd(skill.medianDisclosedUsd)} median advertised annual USD
                         </span>{" "}
-                        <span className="font-mono text-[10px]">
+                        <span className="font-mono text-xs">
                           ({skill.disclosedCount} of {skill.matchingRoles} postings disclose)
                         </span>
                       </div>
                     ) : (
-                      <div className="mt-1 font-mono text-[10px] tracking-wide text-muted-foreground uppercase">
+                      <div className="mt-1 font-mono text-xs tracking-wide text-muted-foreground uppercase">
                         no disclosed comp
                       </div>
                     )}
@@ -106,9 +107,9 @@ export default async function HomePage() {
                             href={job.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex max-w-full items-center gap-1 truncate rounded text-xs text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50"
+                            className="inline-flex min-h-11 max-w-full items-center gap-1 rounded px-1 py-2 text-xs text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50"
                           >
-                            <span className="truncate">
+                            <span className="break-words">
                               {job.title} at {job.company}
                             </span>
                             <ArrowUpRight className="size-3 shrink-0" aria-hidden />
@@ -116,12 +117,13 @@ export default async function HomePage() {
                         ))}
                       </div>
                     )}
+                    {learningForSkill(skill.slug) && <a href={`/learn#${skill.slug}`} className="mt-1 inline-flex min-h-11 items-center rounded text-sm font-medium text-brand underline underline-offset-4">Explore courses and credentials</a>}
                   </div>
                   <div className="sm:text-right">
                     <div className="font-mono text-xl font-semibold tabular-nums text-brand">
                       {skill.demandScore}
                     </div>
-                    <div className="font-mono text-[10px] tracking-wide text-muted-foreground uppercase">
+                    <div className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
                       Demand score
                     </div>
                     <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted" aria-hidden>
@@ -130,7 +132,7 @@ export default async function HomePage() {
                         style={{ width: `${skill.demandScore}%` }}
                       />
                     </div>
-                    <div className="mt-1 font-mono text-[10px] text-muted-foreground">
+                    <div className="mt-1 font-mono text-xs text-muted-foreground">
                       {skill.shareOfRoles}% of roles
                     </div>
                   </div>
@@ -139,8 +141,9 @@ export default async function HomePage() {
             </ol>
           ) : (
             <p className="rounded-xl border border-border bg-muted/40 p-5 text-sm leading-relaxed text-muted-foreground">
-              The public job boards did not answer this refresh. The rankings will return when the
-              source boards do.
+              {market.sourceFailures.length > 0
+                ? `Rankings are paused because ${market.sourceFailures.join(", ")} did not return usable data. Successful sources are counted above, but an incomplete sample is not ranked. Retry by reloading after the next hourly refresh.`
+                : "No matching roles were found in this refresh. All configured sources responded; no demand or salary has been inferred."}
             </p>
           )}
         </section>
@@ -153,7 +156,9 @@ export default async function HomePage() {
               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                 Skill Market Cap classifies functional demand from public job titles and teams. For
                 named technical stacks such as Python and TypeScript, it also scans requirements, but only on
-                technical roles. A role can count toward more than one skill, so shares can overlap.
+                technical job titles. Team context alone does not establish technical work.
+                Keyword matches can include preferred or alternative skills and are not verified requirements.
+                A role can count toward more than one skill, so shares can overlap.
                 The most-mentioned skill scores 100 and the rest are indexed against it. This is a
                 directional sample, not the whole labor market.
               </p>
@@ -161,14 +166,18 @@ export default async function HomePage() {
                 Pay values are medians of employer-disclosed salary-band midpoints from public ATS
                 APIs, mostly US postings under pay-transparency laws. Skills with no disclosed bands
                 show no number: invented precision would be worse than no number.
+                These figures describe roles mentioning a skill, not the standalone value of that skill.
+                Locations and seniority levels are pooled; they are not personalized salary estimates.
+                Ambiguous currencies, incomplete ranges and conflicting location tiers are excluded.
               </p>
+              <a href="/data" className="mt-2 inline-flex min-h-11 items-center rounded text-sm font-medium text-brand underline underline-offset-4">Inspect data sources and capture history</a>
             </div>
           </div>
         </section>
 
         <section className="mt-10 flex flex-col gap-4 rounded-xl border border-border bg-card p-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <div className="font-mono text-[11px] font-medium tracking-[0.14em] text-muted-foreground uppercase">
+            <div className="font-mono text-xs font-medium tracking-[0.14em] text-muted-foreground uppercase">
               Your market cap
             </div>
             <h2 className="mt-1 text-lg font-semibold tracking-tight">
@@ -182,7 +191,7 @@ export default async function HomePage() {
           </div>
           <a
             href="https://skill.supply"
-            className="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors outline-none hover:bg-primary/80 focus-visible:ring-3 focus-visible:ring-ring/50"
+            className="inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors outline-none hover:bg-primary/80 focus-visible:ring-3 focus-visible:ring-ring/50"
           >
             Try the market-fit analysis
             <ArrowRight className="size-4" aria-hidden />
@@ -202,7 +211,7 @@ function formatCompUsd(value: number): string {
 function Metric({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-card p-4">
-      <div className="font-mono text-[10px] tracking-wide text-muted-foreground uppercase">{label}</div>
+      <div className="font-mono text-xs tracking-wide text-muted-foreground uppercase">{label}</div>
       <div className="mt-1 font-mono text-lg font-semibold tabular-nums text-brand">{value}</div>
     </div>
   );

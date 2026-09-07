@@ -20,8 +20,9 @@ it.
 
 - **No estimated salary numbers.** Missing, ambiguous, hourly, and non-USD
   bands are left out rather than inferred.
-- **No 7-day trends.** That needs stored daily snapshots, which means a
-  database this does not have yet.
+- **No 7-day trends.** The local capture command now saves dated snapshots,
+  with daily scheduled capture and 90-day artifact retention. No trend
+  series is published until comparable observations exist.
 - Invented precision would be worse than no number, so neither pay nor
   trends are faked.
 
@@ -37,10 +38,73 @@ npm run dev
 
 ## Where the data comes from
 
-`lib/jobs.ts` holds the verified board slugs (provider plus board id per
-company). `lib/companies.ts` is the company directory. `lib/skills.ts` is
-the classifier and the ranking. Adding a company means adding a verified
+`lib/boards.ts` holds the verified board slugs, re-exported by `lib/jobs.ts`.
+`lib/companies.ts` is the company directory. `lib/classification.ts` holds
+the classifier and `lib/skills.ts` builds the ranking. Adding a company means adding a verified
 ATS slug to `BOARDS`, not guessing one.
+
+## Local source pipeline
+
+Run `npm run data:capture` with Node 24. It creates a unique, git-ignored
+directory under `data/snapshots/`. Each run captures the nine site boards
+plus the verified OpenAI Ashby board as a separate expansion cohort.
+The site continues to use its nine-company directory; the expansion is
+available for inspection before any public coverage change.
+
+The manifest contains source URLs, retrieval timestamps, SHA-256 hashes,
+code hashes, posting counts, duplicate counts and explicit failure states.
+`jobs.json` contains normalized postings; raw board responses preserve
+salary ranges, currencies, periods and location tiers. Duplicate IDs and
+canonical URLs within an employer are excluded. Different posting IDs
+may still represent one underlying vacancy, so counts are postings.
+
+MOM's June 2024 occupational wage dataset is paginated and saved separately
+in `mom-benchmark.json`, labelled monthly SGD survey wages. It never enters
+the annual USD job-ad medians. Source:
+[MOM occupational wages](https://data.gov.sg/datasets/d_670c3c6cecbcd24e48034a3428bd306e/view).
+
+Failed sources make the run exit nonzero. No comparable skill aggregates
+are emitted for an incomplete ATS cohort. An interrupted capture without
+a manifest is incomplete and must not be consumed.
+
+The `Capture market evidence` GitHub Actions workflow runs daily at 02:23
+UTC and supports manual dispatch. It uses Node 24 and public endpoints,
+without API keys or paid data services. It uploads raw and normalized
+evidence even on failure, retaining artifacts for 90 days. Download from
+the Actions run while signed in to GitHub. Runs can be delayed; inspect
+success status before consumption. Export artifacts for longer retention.
+
+`npm run data:verify -- <snapshot-directory>` verifies receipt hashes,
+re-normalizes the raw postings and recomputes every saved aggregate. It
+also verifies the occupational benchmark against its raw pages. A failed
+integrity check fails the workflow; retained evidence is not automatically
+declared valid merely because an artifact exists.
+
+The manifest includes exact source-location groupings. Multi-city strings
+remain multi-city strings; seniority is explicitly unclassified. Pooled
+medians are descriptive, not personalized estimates or the price of a
+standalone skill. Conflicting Ashby location or level tiers are excluded.
+Text parsing requires explicit USD and annual salary context, preserves
+the disclosed endpoints, and declines multiple distinct bands. Missing
+bounds are never filled in. Heuristic text extraction still needs source
+review for ambiguity.
+
+The public ranking also distinguishes source failures from successful
+empty boards. If any expected board fails or contains malformed listed
+postings, rankings are paused with a source warning until a later refresh
+succeeds. Partial coverage is never presented as a comparable ranking.
+
+`npm test`, `npm run lint`, and `npm run build` validate the application.
+
+## Demand to learning
+
+`/learn` connects seven technical skill categories to official course and
+credential pages, maintained in `lib/learning.ts`. Provider sources were
+reviewed on 2026-09-07. Mappings are editorial and cover only part of each
+role; they are not employer endorsements or evidence of salary uplift.
+Free course certificates and optional paid vendor exams are distinguished.
+Practical portfolio suggestions are not issued assessments or credentials.
+`/data` exposes current source status, timestamps and the capture archive.
 
 ## History
 

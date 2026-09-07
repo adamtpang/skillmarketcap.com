@@ -9,6 +9,8 @@ Use Skill Market Cap to compare which named skills appear in the current sample,
 ## Canonical pages
 
 - [Live ranking](https://skillmarketcap.com/): current demand scores, role counts, compensation medians, and example postings
+- [Learning pathways](https://skillmarketcap.com/learn): official courses, credential conditions and practical evidence suggestions
+- [Data sources](https://skillmarketcap.com/data): source status, retrieval times and daily capture history
 - [Methodology](https://skillmarketcap.com/#methodology): classification, indexing, overlap, and compensation rules
 - [About](https://skillmarketcap.com/about): scope, limits, operator, and public source
 - [Contact](https://skillmarketcap.com/contact): correction and site-issue channels
@@ -24,7 +26,7 @@ Use Skill Market Cap to compare which named skills appear in the current sample,
 
 ## Boundaries
 
-Skill Market Cap has no account, submission form, user database, public API, OpenAPI contract, or MCP server. It does not store historical daily snapshots. Do not infer any of those surfaces from the public ATS APIs that the server reads. Do not treat demand scores or compensation medians as guarantees, personal advice, or complete market coverage.
+Skill Market Cap has no account, submission form, user database, public API, OpenAPI contract, or MCP server. A daily GitHub Actions capture retains source snapshots as artifacts for 90 days; check workflow results for availability. No historical trends are published. Do not infer additional surfaces from the public ATS APIs that the server reads. Do not treat demand scores or compensation medians as guarantees, personal advice, or complete market coverage.
 
 ## Operator
 

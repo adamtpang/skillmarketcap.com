@@ -5,6 +5,8 @@ const BASE = "https://skillmarketcap.com";
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: BASE, changeFrequency: "daily", priority: 1 },
+    { url: `${BASE}/learn`, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE}/data`, changeFrequency: "daily", priority: 0.7 },
     { url: `${BASE}/about`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/contact`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${BASE}/privacy`, changeFrequency: "monthly", priority: 0.6 },

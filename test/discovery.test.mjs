@@ -20,6 +20,8 @@ test("sitemap exposes every linked trust page", () => {
 
   assert.deepEqual(urls, [
     "https://skillmarketcap.com",
+    "https://skillmarketcap.com/learn",
+    "https://skillmarketcap.com/data",
     "https://skillmarketcap.com/about",
     "https://skillmarketcap.com/contact",
     "https://skillmarketcap.com/privacy",

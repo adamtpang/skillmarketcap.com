@@ -1,0 +1,39 @@
+name: Capture market evidence
+on:
+  schedule:
+    - cron: '23 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: capture-market
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+      - name: Test source handling
+        run: node --no-warnings --experimental-strip-types --test test/market-data.test.mjs test/pipeline.test.mjs test/source-integrity.test.mjs test/capture-integrity.test.mjs
+      - name: Capture sources
+        id: capture
+        run: node --no-warnings --experimental-strip-types scripts/capture-market.mjs
+      - name: Verify raw receipts and recompute aggregates
+        env:
+          SNAPSHOT_DIRECTORY: ${{ steps.capture.outputs.directory }}
+        run: node --no-warnings --experimental-strip-types scripts/verify-capture.mjs "$SNAPSHOT_DIRECTORY"
+      - name: Retain evidence, including failed captures
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: market-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: data/snapshots/
+          retention-days: 90
+          if-no-files-found: error
