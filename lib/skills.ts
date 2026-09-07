@@ -99,7 +99,7 @@ export async function buildSkillMarket(): Promise<SkillMarketSnapshot> {
 }
 
 /** Cache the compact computed snapshot, never the large source-board payloads. */
-export const fetchSkillMarket = unstable_cache(buildSkillMarket, ["skill-market-v8"], {
+export const fetchSkillMarket = unstable_cache(buildSkillMarket, ["skill-market-v9"], {
   revalidate: 3600,
   tags: ["skill-market"],
 });

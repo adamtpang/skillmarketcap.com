@@ -23,6 +23,7 @@ export async function loadBoard(slug: string, fetcher: typeof fetch = fetch): Pr
     const {jobs} = normalizeBoard(await response.json(),{company:slug,...board});
     return {company:slug,status:'ok',url,fetchedAt:new Date().toISOString(),jobs};
   } catch (error) {
+    console.warn('[market-source-failure]', slug, error instanceof Error ? error.message : 'Source read failed');
     return {company:slug,status:'failed',url,fetchedAt:new Date().toISOString(),jobs:[],error:error instanceof Error ? error.message : 'Source read failed'};
   }
 }
