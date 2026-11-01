@@ -57,7 +57,7 @@ export default function ContactPage() {
           privacy terms apply to anything entered there.
         </p>
         <a
-          href="https://skill.supply"
+          href="https://skill.supply/?utm_source=skillmarketcap&utm_medium=referral&utm_content=contact"
           className="mt-4 inline-flex items-center gap-1.5 rounded text-sm font-medium underline underline-offset-4 outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
         >
           Try the market-fit analysis

@@ -50,7 +50,7 @@ export default async function LearnPage() {
     <section className="text-sm leading-relaxed text-muted-foreground">
       <h2 className="font-semibold text-foreground">Choose the next gap, not the biggest salary</h2>
       <p className="mt-2">Advertised pay is for a complete role with location, experience and responsibilities. These courses cover only part of a skill category. Review each posting before investing time or paying an exam provider.</p>
-      <p className="mt-2">Use your resulting work in a <a className={linkStyle} href="https://skill.supply">skill.supply market-fit analysis</a>. Learning program development belongs with <a className={linkStyle} href="https://company.university">company.university</a>.</p>
+      <p className="mt-2">Use your resulting work in a <a className={linkStyle} href="https://skill.supply/?utm_source=skillmarketcap&utm_medium=referral&utm_content=learn">skill.supply market-fit analysis</a>. Learning program development belongs with <a className={linkStyle} href="https://company.university">company.university</a>.</p>
       <p className="mt-2">Human course certificates follow each provider&apos;s identity and academic-honesty rules. Agent performance needs a separate practical evaluation with its model, tools and human interventions disclosed. We do not issue agent credentials or submit job applications.</p>
     </section>
   </InfoPage>;

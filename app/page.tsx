@@ -72,7 +72,7 @@ export default async function HomePage() {
           {market.signals.length > 0 ? (
             <ol className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
               {market.signals.map((skill, index) => (
-                <li key={skill.slug} className="grid gap-4 p-4 sm:grid-cols-[2rem_1fr_9rem] sm:p-5">
+                <li key={skill.slug} id={skill.slug} className="grid scroll-mt-4 gap-4 p-4 sm:grid-cols-[2rem_1fr_9rem] sm:p-5">
                   <div className="font-mono text-xs tabular-nums text-muted-foreground">
                     {String(index + 1).padStart(2, "0")}
                   </div>
@@ -119,7 +119,10 @@ export default async function HomePage() {
                         ))}
                       </div>
                     )}
-                    {learningForSkill(skill.slug) && <a href={`/learn#${skill.slug}`} className="mt-1 inline-flex min-h-11 items-center rounded text-sm font-medium text-brand underline underline-offset-4">Explore courses and credentials</a>}
+                    <div className="mt-1 flex flex-wrap gap-x-4">
+                      {learningForSkill(skill.slug) && <a href={`/learn#${skill.slug}`} className="inline-flex min-h-11 items-center rounded text-sm font-medium text-brand underline underline-offset-4">Explore courses and credentials</a>}
+                      <a href={skillSupplyUrl("skill_row", skill.slug)} className="inline-flex min-h-11 items-center rounded text-sm font-medium text-brand underline underline-offset-4">Check your fit for {skill.name.toLowerCase()} roles</a>
+                    </div>
                   </div>
                   <div className="sm:text-right">
                     <div className="font-mono text-xl font-semibold tabular-nums text-brand">
@@ -193,7 +196,7 @@ export default async function HomePage() {
             </p>
           </div>
           <a
-            href="https://skill.supply"
+            href={skillSupplyUrl("page")}
             className="inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors outline-none hover:bg-primary/80 focus-visible:ring-3 focus-visible:ring-ring/50"
           >
             Try the market-fit analysis
@@ -218,4 +221,17 @@ function Metric({ label, value }: { label: string; value: string }) {
       <div className="mt-1 font-mono text-lg font-semibold tabular-nums text-brand">{value}</div>
     </div>
   );
+}
+
+// Every link into skill.supply carries where it came from, so the shared
+// PostHog project can attribute a skill.supply visit to this page and, for
+// row links, to the exact skill the visitor was looking at.
+function skillSupplyUrl(placement: string, skill?: string): string {
+  const params = new URLSearchParams({
+    utm_source: "skillmarketcap",
+    utm_medium: "referral",
+    utm_content: placement,
+  });
+  if (skill) params.set("skill", skill);
+  return `https://skill.supply/?${params.toString()}`;
 }

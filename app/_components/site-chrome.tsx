@@ -13,7 +13,7 @@ export function SiteHeader() {
       </Link>
       <nav className="flex items-center gap-4" aria-label="Site navigation">
         <a
-          href="https://skill.supply"
+          href="https://skill.supply/?utm_source=skillmarketcap&utm_medium=referral&utm_content=nav"
           className="inline-flex min-h-11 items-center gap-1.5 rounded font-mono text-xs tracking-[0.14em] text-muted-foreground uppercase outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50"
         >
           skill.supply
