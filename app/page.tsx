@@ -1,6 +1,7 @@
 import { ArrowRight, ArrowUpRight, CircleHelp } from "lucide-react";
 import { fetchSkillMarket } from "@/lib/skills";
 import { learningForSkill } from "@/lib/learning";
+import { H1B_SNAPSHOT } from "@/lib/h1b";
 import { SiteFooter, SiteHeader } from "./_components/site-chrome";
 
 export default async function HomePage() {
@@ -151,6 +152,65 @@ export default async function HomePage() {
                 : "No matching roles were found in this refresh. All configured sources responded; no demand or salary has been inferred."}
             </p>
           )}
+        </section>
+
+        <section id="h1b-levels" className="mt-8 scroll-mt-6" aria-labelledby="h1b-title">
+          <div className="font-mono text-xs font-medium tracking-[0.14em] text-muted-foreground uppercase">
+            Pay floors by level
+          </div>
+          <h2 id="h1b-title" className="mt-1 text-xl font-semibold tracking-tight">
+            What these employers legally committed to pay H-1B hires
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            Median filed minimum base salary by government wage level, from{" "}
+            {H1B_SNAPSHOT.filings} certified H-1B filings by {H1B_SNAPSHOT.companies.join(", ")}{" "}
+            ({H1B_SNAPSHOT.window}). Level I is entry, level IV is fully competent and senior.
+          </p>
+          <div className="mt-3 overflow-x-auto rounded-xl border border-border bg-card">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border text-left font-mono text-xs tracking-wide text-muted-foreground uppercase">
+                  <th className="p-3 font-medium sm:px-5">Level</th>
+                  <th className="p-3 text-right font-medium sm:px-5">All roles</th>
+                  <th className="p-3 text-right font-medium sm:px-5">Software roles</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {H1B_SNAPSHOT.levels.map((row) => (
+                  <tr key={row.level}>
+                    <td className="p-3 font-semibold whitespace-nowrap sm:px-5">Level {row.level}</td>
+                    <td className="p-3 text-right sm:px-5">
+                      <div className="font-mono font-semibold tabular-nums text-brand">
+                        {formatCompUsd(row.medianFloorUsd)}
+                      </div>
+                      <div className="font-mono text-xs whitespace-nowrap text-muted-foreground">{row.filings} filings</div>
+                    </td>
+                    <td className="p-3 text-right sm:px-5">
+                      <div className="font-mono font-semibold tabular-nums text-brand">
+                        {formatCompUsd(row.softwareMedianFloorUsd)}
+                      </div>
+                      <div className="font-mono text-xs whitespace-nowrap text-muted-foreground">{row.softwareFilings} filings</div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-2 max-w-2xl text-xs leading-relaxed text-muted-foreground">
+            These are minimums, not typical pay. {H1B_SNAPSHOT.filingsAtPrevailingWage} of{" "}
+            {H1B_SNAPSHOT.filings} filings sit exactly at the government&apos;s prevailing wage for the
+            role and city, which is why the medians land on that legal minimum. Base salary only, no equity
+            or bonus. {H1B_SNAPSHOT.companiesWithoutFilings.join(" and ")} had no filings in this
+            window. A fixed snapshot pulled {H1B_SNAPSHOT.pulledOn}, not refreshed hourly.{" "}
+            <a
+              href={H1B_SNAPSHOT.sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-brand underline underline-offset-4"
+            >
+              Source: {H1B_SNAPSHOT.source}
+            </a>
+          </p>
         </section>
 
         <section id="methodology" className="mt-6 scroll-mt-6 rounded-xl border border-border bg-muted/40 p-5">
