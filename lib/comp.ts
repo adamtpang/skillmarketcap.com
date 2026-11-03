@@ -38,6 +38,11 @@ function bandMidpointUsd(min: number, max: number): number | null {
   return Math.round((min + max) / 2);
 }
 
+/** Same rails as Ashby and Greenhouse text: annual USD only, or no number. */
+export function annualUsdMidpoint(min: number, max: number): number | null {
+  return bandMidpointUsd(min, max);
+}
+
 /** Structured comp from Ashby's `?includeCompensation=true` payload. */
 export function ashbyCompBandUsd(j: Record<string, unknown>): DisclosedBand | null {
   const comp = j.compensation as AshbyCompensation | undefined | null;

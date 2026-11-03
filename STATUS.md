@@ -1,5 +1,14 @@
 # Skill Market Cap status
 
+As of 2026-11-03 the published ranking is a completed capture of public
+Greenhouse, Ashby, Lever, Workable, Recruitee, Personio, and Rippling
+job-board APIs, kept only when at least 1,000 employer boards return roles.
+Each board has equal weight. The page reads `data/market-public.json` and
+does not refetch those boards on each visit. Workday was not called.
+SmartRecruiters, levels.fyi, and BLS, O*NET, OECD, ILO, Eurostat, and UK ONS
+series are not inputs. The notes below describe the earlier nine-board
+implementation and the daily evidence archive, which still runs.
+
 As of 2026-09-07. This file describes the implementation, not a deployment receipt.
 
 Classification: live demand index, pre-company proof. A public site and

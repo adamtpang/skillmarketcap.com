@@ -1,20 +1,21 @@
 # skillmarketcap.com
 
-A live demand ranking of skills, computed hourly from the real roles
-published on public job boards. Directional, sourced, and honest about
-what it does not measure.
+A demand ranking of skills from public employer job boards. Each employer
+counts equally. Directional, sourced, and honest about what it does not
+measure.
 
 Live: https://skillmarketcap.com
 
 ## What it does
 
-Scans the public applicant-tracking boards (Greenhouse and Ashby posting
-APIs, no scraping) of the companies in `lib/companies.ts`, classifies
-every live role against 15 skill definitions, and ranks them by how often
-they appear. The most-mentioned skill scores 100; the rest are indexed
-against it. Each skill also shows the median midpoint of usable
-employer-disclosed annual USD salary bands and the disclosure count behind
-it.
+The published ranking is a completed capture of public Greenhouse, Ashby,
+Lever, Workable, Recruitee, Personio, and Rippling job-board APIs. Candidate
+board addresses come from the public job-board directory and are called
+again before any count is kept. The capture has to return roles for at
+least 1,000 employer boards. Each board has weight 1, split across its
+postings, and the highest weight scores 100. Role counts are still shown.
+Pay is the median midpoint of usable employer-disclosed annual USD bands,
+with the disclosure count. A missing band shows no number.
 
 ## What it deliberately does not do
 
@@ -38,10 +39,13 @@ npm run dev
 
 ## Where the data comes from
 
-`lib/boards.ts` holds the verified board slugs, re-exported by `lib/jobs.ts`.
-`lib/companies.ts` is the company directory. `lib/classification.ts` holds
-the classifier and `lib/skills.ts` builds the ranking. Adding a company means adding a verified
-ATS slug to `BOARDS`, not guessing one.
+`data/market-public.json` is the ranking the site renders.
+`data/expanded-boards.json` lists every employer board and its public API URL.
+`data/expanded-postings.jsonl.gz` holds the normalized postings used to compute it.
+`lib/boards.ts` is still the original nine-board cohort used by the daily
+evidence archive. `lib/classification.ts` holds the classifier. Refresh the
+published sample with `node --no-warnings --experimental-strip-types scripts/capture-expanded-market.mjs`.
+Do not guess an ATS slug. A board is kept only after its public API returns roles.
 
 ## Local source pipeline
 
