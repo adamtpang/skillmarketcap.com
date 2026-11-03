@@ -52,6 +52,10 @@ next-env.d.ts
 # outreach drafts, never committed (public repo)
 sales/
 
+# intermediate ATS capture. The committed sample is the gzip, the board list, and market-public.json.
+/data/expanded-postings.jsonl
+/data/expanded-outcomes.jsonl
+
 # local report-worker runtime log
 worker/worker.log
 

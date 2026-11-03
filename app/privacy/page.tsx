@@ -54,7 +54,8 @@ export default function PrivacyPage() {
       <section>
         <h2 className="text-lg font-semibold tracking-tight">Job-board data and external links</h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          The server fetches public Greenhouse and Ashby job-board data to build the ranking. Those
+          The published ranking is a completed capture of public Greenhouse, Ashby, Lever, Workable,
+          Recruitee, Personio, and Rippling job-board APIs. Those
           requests contain no visitor-submitted profile because Skill Market Cap collects none. Job
           examples link to employer posting pages, and the site also links to skill.supply, GitHub,
           Adam Pang&apos;s site, and Vercel. A destination&apos;s own privacy terms apply after you leave.

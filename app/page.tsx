@@ -24,14 +24,16 @@ export default async function HomePage() {
       <main className="flex-1 pb-16">
         <section className="pt-12 pb-8 sm:pt-16">
           <div className="font-mono text-xs font-medium tracking-[0.14em] text-muted-foreground uppercase">
-            Public job data, checked hourly
+            Public job boards, one employer one vote
           </div>
           <h1 className="mt-2 max-w-2xl text-3xl font-semibold tracking-tighter text-balance sm:text-4xl">
             See what the market is asking for
           </h1>
           <p className="mt-4 max-w-2xl text-[0.95rem] leading-relaxed text-muted-foreground">
-            A demand snapshot built from the actual roles published by high-potential companies on
-            their public job boards. Explore relevant courses, then build work that proves the skill.
+            A demand snapshot from public employer job boards across software, healthcare, trades,
+            sales, finance, logistics, education, and other work. Each employer counts equally, so
+            one large board cannot set the ranking. Explore relevant courses, then build work that
+            proves the skill.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-4">
             <a
@@ -67,8 +69,14 @@ export default async function HomePage() {
                 Skills mentioned in hiring
               </h2>
             </div>
-            <div className="font-mono text-xs text-muted-foreground">Last complete sample: {refreshed} UTC</div>
+            <div className="font-mono text-xs text-muted-foreground">Captured sample: {refreshed} UTC</div>
           </div>
+          <p className="mb-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            The score gives every employer board the same weight, split across the roles it posted.
+            Raw counts are postings, including the same title repeated across cities. The largest board
+            in this sample is {market.largestEmployer.name} with {market.largestEmployer.roles.toLocaleString()} roles
+            ({market.largestEmployer.shareOfRoles}% of postings).
+          </p>
 
           {market.signals.length > 0 ? (
             <ol className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
@@ -130,7 +138,7 @@ export default async function HomePage() {
                       {skill.demandScore}
                     </div>
                     <div className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
-                      Demand score
+                      Employer-weighted
                     </div>
                     <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted" aria-hidden>
                       <div
@@ -147,11 +155,78 @@ export default async function HomePage() {
             </ol>
           ) : (
             <p className="rounded-xl border border-border bg-muted/40 p-5 text-sm leading-relaxed text-muted-foreground">
-              {market.sourceFailures.length > 0
-                ? `Rankings are paused because ${market.sourceFailures.join(", ")} did not return usable data. Successful sources are counted above, but an incomplete sample is not ranked. Retry by reloading after the next hourly refresh.`
-                : "No matching roles were found in this refresh. All configured sources responded; no demand or salary has been inferred."}
+              No matching roles were found in this capture. Boards that failed or listed nothing were omitted.
+              No demand or salary has been inferred.
             </p>
           )}
+        </section>
+
+        <section id="sectors" className="mt-8 scroll-mt-6" aria-labelledby="sectors-title">
+          <div className="font-mono text-xs font-medium tracking-[0.14em] text-muted-foreground uppercase">
+            Occupational mix
+          </div>
+          <h2 id="sectors-title" className="mt-1 text-xl font-semibold tracking-tight">
+            What kind of work the postings describe
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            Each posting gets one sector from its title. The team is used only when the title matches
+            none of the sector rules. Unspecified means the title did not match a rule, not that the
+            work has no field.
+          </p>
+          <div className="mt-3 overflow-x-auto rounded-xl border border-border bg-card">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border text-left font-mono text-xs tracking-wide text-muted-foreground uppercase">
+                  <th className="p-3 font-medium sm:px-5">Sector</th>
+                  <th className="p-3 text-right font-medium sm:px-5">Roles</th>
+                  <th className="p-3 text-right font-medium sm:px-5">Employers</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {market.sectors.map((row) => (
+                  <tr key={row.label}>
+                    <td className="p-3 font-semibold sm:px-5">{row.label}</td>
+                    <td className="p-3 text-right font-mono tabular-nums sm:px-5">{row.roles.toLocaleString()}</td>
+                    <td className="p-3 text-right font-mono tabular-nums sm:px-5">{row.companies.toLocaleString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="countries" className="mt-8 scroll-mt-6" aria-labelledby="countries-title">
+          <div className="font-mono text-xs font-medium tracking-[0.14em] text-muted-foreground uppercase">
+            Where the postings name a place
+          </div>
+          <h2 id="countries-title" className="mt-1 text-xl font-semibold tracking-tight">
+            Countries stated on the roles
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            A country is recorded only when the posting names one, or names a US postal abbreviation
+            or Canadian province. A city alone stays Unspecified. Boards in more than one country are
+            Multiple. This is not a headquarters map.
+          </p>
+          <div className="mt-3 overflow-x-auto rounded-xl border border-border bg-card">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border text-left font-mono text-xs tracking-wide text-muted-foreground uppercase">
+                  <th className="p-3 font-medium sm:px-5">Country</th>
+                  <th className="p-3 text-right font-medium sm:px-5">Roles</th>
+                  <th className="p-3 text-right font-medium sm:px-5">Employers</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {market.countries.slice(0, 12).map((row) => (
+                  <tr key={row.label}>
+                    <td className="p-3 font-semibold sm:px-5">{row.label}</td>
+                    <td className="p-3 text-right font-mono tabular-nums sm:px-5">{row.roles.toLocaleString()}</td>
+                    <td className="p-3 text-right font-mono tabular-nums sm:px-5">{row.companies.toLocaleString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </section>
 
         <section id="h1b-levels" className="mt-8 scroll-mt-6" aria-labelledby="h1b-title">
@@ -219,22 +294,44 @@ export default async function HomePage() {
             <div>
               <h2 className="text-sm font-semibold">How the score works</h2>
               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                Skill Market Cap classifies functional demand from public job titles and teams. For
-                named technical stacks such as Python and TypeScript, it also scans requirements, but only on
-                technical job titles. Team context alone does not establish technical work.
-                Keyword matches can include preferred or alternative skills and are not verified requirements.
-                A role can count toward more than one skill, so shares can overlap.
-                The most-mentioned skill scores 100 and the rest are indexed against it. This is a
-                directional sample, not the whole labor market.
+                This capture reads public job-board APIs from Greenhouse, Ashby, Lever, Workable,
+                Recruitee, Personio, and Rippling. Candidate board addresses come from the{" "}
+                <a href={market.sample.directoryUrl} className="font-medium text-brand underline underline-offset-4">public job-board directory</a>
+                , and every count on this page was recomputed from a fresh response.{" "}
+                {market.sample.attempted.toLocaleString()} boards were called.{" "}
+                {market.sample.failed.toLocaleString()} failed and {market.sample.empty.toLocaleString()} listed
+                no roles. Those boards are omitted. They are not scored as zero demand.{" "}
+                {market.sample.workdayNotCalled.toLocaleString()} Workday addresses in that directory were not
+                called. The published sample keeps the {market.companiesScanned.toLocaleString()} boards that
+                returned at least one role.
               </p>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Pay values are medians of employer-disclosed salary-band midpoints from public ATS
-                APIs, mostly US postings under pay-transparency laws. Skills with no disclosed bands
-                show no number: invented precision would be worse than no number.
-                These figures describe roles mentioning a skill, not the standalone value of that skill.
-                Locations and seniority levels are pooled; they are not personalized salary estimates.
-                Ambiguous currencies, incomplete ranges and conflicting location tiers are excluded.
-                If a source refresh fails, the previous complete sample stays visible with its capture time.
+                Classification uses the title, plus team or department when the list endpoint provides
+                one. The rules are English occupational titles plus a short explicit list of common
+                German, French, Spanish, Dutch, Italian, and Portuguese job titles. Other languages
+                and unlisted titles stay unmatched. Requirement text is not stored, so a language
+                such as Python counts only when the title or team names it. Keyword matches can
+                include preferred or alternative skills.
+                A role can count toward more than one skill, so shares can overlap. Each employer board
+                has weight 1, divided across its postings. The highest weight scores 100. Role share is
+                the raw posting share and can disagree with the score. This is a sample of employers
+                that publish on these applicant-tracking systems, not the whole labor market.
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Pay values are medians of employer-disclosed annual USD salary-band midpoints. Ashby
+                structured bands and Lever year ranges in USD are eligible. The Greenhouse list endpoint
+                has no salary field, and this capture does not download description HTML to recover one.
+                Skills with no usable band show no number. Ambiguous currencies, hourly rates, and
+                incomplete ranges are left out. These figures describe roles in a skill family, not the
+                standalone price of a skill. {market.sample.slugNamedCompanies.toLocaleString()} employer
+                labels are title-cased board slugs because that API did not return a company name.
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Not in this ranking: SmartRecruiters, levels.fyi, and statistical series from BLS, O*NET,
+                OECD, ILO, Eurostat, and the UK ONS. Several of those need an API key or forbid automated
+                collection, and the occupation surveys are not company job boards. They are follow-ups,
+                not hidden inputs. The H-1B table below is a separate fixed snapshot for the original
+                nine employers. No trend series is published.
               </p>
               <a href="/data" className="mt-2 inline-flex min-h-11 items-center rounded text-sm font-medium text-brand underline underline-offset-4">Inspect data sources and capture history</a>
             </div>

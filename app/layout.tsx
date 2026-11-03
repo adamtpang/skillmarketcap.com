@@ -20,14 +20,14 @@ export const metadata: Metadata = {
     template: "%s · Skill Market Cap",
   },
   description:
-    "A live demand ranking of skills, computed hourly from the real roles published on public job boards. Directional, sourced, and honest about what it does not measure.",
+    "A demand ranking of skills from public employer job boards, with each employer weighted equally. Directional, sourced, and honest about what it does not measure.",
   alternates: {
     canonical: "https://skillmarketcap.com",
   },
   openGraph: {
     title: "Skill Market Cap",
     description:
-      "Which skills appear most often across live roles at high-potential companies, ranked from real job-board data.",
+      "Which skills appear across public employer job boards, ranked with equal weight per employer.",
     url: "https://skillmarketcap.com",
     siteName: "Skill Market Cap",
     type: "website",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Skill Market Cap",
-    description: "Live skill demand, computed from real job boards, not opinion.",
+    description: "Skill demand from public job boards, with equal weight per employer.",
   },
 };
 
@@ -68,7 +68,7 @@ const jsonLd = [
     name: "Skill Market Cap",
     url: "https://skillmarketcap.com",
     description:
-      "A live demand ranking of skills, computed hourly from the real roles published on public job boards.",
+      "A demand ranking of skills from public employer job boards, with equal weight per employer.",
     publisher: { "@id": "https://skillmarketcap.com/#organization" },
     creator: { "@id": "https://skillmarketcap.com/#operator" },
   },

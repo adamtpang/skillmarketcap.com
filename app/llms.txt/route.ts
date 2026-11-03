@@ -1,6 +1,6 @@
 const LLMS_TEXT = `# Skill Market Cap
 
-> Skill Market Cap is a live, directional ranking of explicit skill demand in a verified sample of public company job boards.
+> Skill Market Cap is a directional ranking of explicit skill demand in a verified sample of public company job boards. Each employer board has equal weight.
 
 ## When to use this site
 
@@ -19,10 +19,10 @@ Use Skill Market Cap to compare which named skills appear in the current sample,
 
 ## Data and methodology
 
-- The server reads live postings from verified public Greenhouse and Ashby job-board APIs and caches the computed snapshot for one hour.
-- Functional skills are classified from public titles and teams. Named technical stacks can also use requirements text, but only for technical roles.
-- A role can match more than one skill. The largest matching role count scores 100 and the other scores are indexed against it.
-- Pay values are medians of employer-disclosed annual USD salary-band midpoints. The disclosure count is shown, and missing or ambiguous bands produce no figure.
+- The published ranking is a completed capture of public Greenhouse, Ashby, Lever, Workable, Recruitee, Personio, and Rippling job-board APIs. The page shows the capture time. It does not refetch every board on each visit.
+- Functional skills are classified from public titles and, when the list endpoint provides one, the team or department. Requirement text is not part of this sample, so a named language counts only when the title or team names it.
+- A role can match more than one skill. Each employer board has weight 1, split across its postings. The largest weight scores 100.
+- Pay values are medians of employer-disclosed annual USD salary-band midpoints from Ashby structured bands and Lever year ranges. The disclosure count is shown, and missing or ambiguous bands produce no figure.
 
 ## Boundaries
 
