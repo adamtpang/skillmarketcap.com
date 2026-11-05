@@ -87,3 +87,6 @@ worker/worker.log
 /scripts/issues-found.json
 
 .vercel
+
+# Keep the committed example available. A later .env* rule above re-ignores it.
+!.env.example

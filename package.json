@@ -2,6 +2,9 @@
   "name": "skillmarketcap.fun",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "data:verify": "node --no-warnings --experimental-strip-types scripts/verify-capture.mjs",
     "data:capture": "node --no-warnings --experimental-strip-types scripts/capture-market.mjs",
