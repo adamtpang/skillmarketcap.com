@@ -8,7 +8,8 @@ Use Skill Market Cap to compare which named skills appear in the current sample,
 
 ## Canonical pages
 
-- [Live ranking](https://skillmarketcap.com/): current demand scores, role counts, compensation medians, and example postings
+- [Captured ranking](https://skillmarketcap.com/): employer-weighted demand scores, posting counts, disclosed salary-band medians, and example postings
+- [US outlook](https://skillmarketcap.com/#outlook): BLS Employment Projections 2025-35 and May 2025 OEWS median wages, kept separate from the job-board score
 - [Learning pathways](https://skillmarketcap.com/learn): official courses, credential conditions and practical evidence suggestions
 - [Data sources](https://skillmarketcap.com/data): source status, retrieval times and daily capture history
 - [Methodology](https://skillmarketcap.com/#methodology): classification, indexing, overlap, and compensation rules
@@ -22,7 +23,8 @@ Use Skill Market Cap to compare which named skills appear in the current sample,
 - The published ranking is a completed capture of public Greenhouse, Ashby, Lever, Workable, Recruitee, Personio, and Rippling job-board APIs. The page shows the capture time. It does not refetch every board on each visit.
 - Functional skills are classified from public titles and, when the list endpoint provides one, the team or department. Requirement text is not part of this sample, so a named language counts only when the title or team names it.
 - A role can match more than one skill. Each employer board has weight 1, split across its postings. The largest weight scores 100.
-- Pay values are medians of employer-disclosed annual USD salary-band midpoints from Ashby structured bands and Lever year ranges. The disclosure count is shown, and missing or ambiguous bands produce no figure.
+- Pay values are medians of employer-disclosed annual USD salary-band midpoints from Ashby structured salary components, Lever year ranges, and Recruitee annual USD salary objects. The disclosure count is shown, and missing or ambiguous bands produce no figure. These medians are not OEWS wages, not total compensation, and not a skill market cap.
+- The homepage also quotes US BLS Employment Projections 2025-35 and May 2025 OEWS median wages. Those official figures are not inputs to the employer-weighted score. There is no BLS SOC for Forward Deployed Engineer.
 
 ## Boundaries
 

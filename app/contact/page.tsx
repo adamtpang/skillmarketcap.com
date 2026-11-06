@@ -26,7 +26,7 @@ export default function ContactPage() {
         </p>
         <a
           href="https://github.com/adamtpang/skillmarketcap.com/issues/new"
-          className="mt-4 inline-flex h-10 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground outline-none hover:bg-primary/80 focus-visible:ring-3 focus-visible:ring-ring/50"
+          className="mt-4 inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground outline-none hover:bg-primary/80 focus-visible:ring-3 focus-visible:ring-ring/50"
         >
           Open a GitHub issue
           <ArrowUpRight className="size-4" aria-hidden />
@@ -53,7 +53,7 @@ export default function ContactPage() {
         <h2 className="text-lg font-semibold tracking-tight">Career market-fit analysis</h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           Skill Market Cap itself does not accept resumes or run personal analyses. The sibling site
-          skill.supply is the separate tool for comparing a background with live demand. Its own
+          skill.supply is the separate tool for comparing a background with the captured ranking. Its own
           privacy terms apply to anything entered there.
         </p>
         <a
