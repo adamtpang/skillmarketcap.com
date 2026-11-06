@@ -24,14 +24,14 @@ export default async function LearnPage() {
       An optional vendor exam is labelled separately. We charge no learning fee and receive no referral fee.
       A certificate alone does not guarantee competence, a job or a salary increase.
     </p>
-    <Link className={linkStyle} href="/">Compare all live skill demand</Link>
+    <Link className={linkStyle} href="/">Compare the captured ranking</Link>
     {paths.map(path => {
       const signal = market.signals.find(s=>s.slug===path.skill);
       return <section key={path.skill} id={path.skill} className="scroll-mt-6 rounded-xl border border-border p-5">
         <h2 className="text-xl font-semibold tracking-tight">{SKILLS.find(s=>s.slug===path.skill)?.name}</h2>
         <p className="mt-2 text-sm text-muted-foreground">{signal
           ? `${signal.matchingRoles} matching postings across ${signal.companiesHiring} employers in the latest site sample.`
-          : market.sourceFailures.length ? 'Live demand unavailable while a source recovers.' : 'No matching postings in the latest site sample.'}</p>
+          : market.sourceFailures.length ? 'The captured ranking is unavailable while a source recovers.' : 'No matching postings in the latest site sample.'}</p>
         <h3 className="mt-5 font-semibold">{path.title}</h3>
         <p className="mt-1 text-sm text-muted-foreground">{path.provider} · {path.cost}</p>
         <p className="mt-3 text-sm leading-relaxed">{path.focus} {path.prerequisite}</p>

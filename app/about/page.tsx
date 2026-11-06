@@ -13,7 +13,7 @@ export default function AboutPage() {
     <InfoPage
       eyebrow="About the project"
       title="A demand index with visible limits"
-      intro="Skill Market Cap is a public skill-demand ranking built and operated by Adam Pang. Its job is narrow: show what a verified sample of live job boards is asking for, then make the method and its limits easy to inspect."
+      intro="Skill Market Cap is a public demand ranking built and operated by Adam Pang. Its job is narrow: show what a completed capture of public job boards is asking for, keep that score separate from US occupational projections, and make the method and its limits easy to inspect."
     >
       <section>
         <h2 className="text-lg font-semibold tracking-tight">What Skill Market Cap measures</h2>
@@ -42,11 +42,14 @@ export default function AboutPage() {
       <section>
         <h2 className="text-lg font-semibold tracking-tight">What the ranking cannot tell you</h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          The ranking is a directional sample, not the whole labor market and not a historical
-          trend. One role can match more than one skill. Compensation coverage is uneven because
-          disclosure depends on the employer and posting. Daily evidence captures are retained
-          in the project&apos;s workflow artifacts for a limited period. There is no public API
-          and no claim that demand alone determines a person&apos;s fit.
+          The ranking is a directional sample of postings, not the whole labor market, not national
+          job growth, and not a historical trend. The name is not a dollar market capitalization.
+          One posting can match more than one skill. Compensation coverage is uneven because
+          disclosure depends on the employer and posting. A separate homepage section quotes BLS
+          Employment Projections and May 2025 median wages. Those figures are not inputs to the
+          score. Daily evidence captures are retained in the project&apos;s workflow artifacts for a
+          limited period. There is no public API and no claim that demand alone determines a
+          person&apos;s fit.
         </p>
       </section>
 

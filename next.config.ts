@@ -7,8 +7,8 @@ import { SECURITY_HEADERS } from "./lib/site-policy.mjs";
 // would have redirected the site's own domain into a loop.
 const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
-    "/": ["./data/market-public.json"],
-    "/data": ["./data/market-public.json"],
+    "/": ["./data/market-public.json", "./data/expanded-postings.jsonl.gz"],
+    "/data": ["./data/market-public.json", "./data/expanded-postings.jsonl.gz"],
     "/learn": ["./data/market-public.json"],
   },
   async headers() {

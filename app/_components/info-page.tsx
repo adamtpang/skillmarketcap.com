@@ -12,7 +12,7 @@ export function InfoPage({ eyebrow, title, intro, children }: InfoPageProps) {
   return (
     <div className="mx-auto flex min-h-full w-full max-w-4xl flex-1 flex-col px-5 sm:px-8">
       <SiteHeader />
-      <main className="flex-1 pb-16 pt-12 sm:pt-16">
+      <main id="content" className="flex-1 pb-16 pt-12 sm:pt-16">
         <header className="max-w-2xl">
           <div className="font-mono text-xs font-medium tracking-[0.14em] text-muted-foreground uppercase">
             {eyebrow}

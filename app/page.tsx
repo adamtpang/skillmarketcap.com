@@ -1,27 +1,21 @@
 import { ArrowRight, ArrowUpRight, CircleHelp } from "lucide-react";
 import { fetchSkillMarket } from "@/lib/skills";
 import { learningForSkill } from "@/lib/learning";
+import { SKILLS } from "@/lib/classification";
 import { H1B_SNAPSHOT } from "@/lib/h1b";
+import { formatCapturedAt, formatCount, formatPercentOf, formatUsd, SMALL_DISCLOSURE_COUNT } from "@/lib/display";
+import { OfficialOutlook } from "./_components/official-outlook";
 import { SiteFooter, SiteHeader } from "./_components/site-chrome";
 
 export default async function HomePage() {
   const market = await fetchSkillMarket();
-  const coverage =
-    market.rolesScanned === 0 ? 0 : Math.round((market.rolesClassified / market.rolesScanned) * 100);
-  const refreshed = new Intl.DateTimeFormat("en", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: "UTC",
-  }).format(new Date(market.asOf));
+  const refreshed = formatCapturedAt(market.asOf);
 
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col px-5 sm:px-8">
       <SiteHeader />
 
-      <main className="flex-1 pb-16">
+      <main id="content" className="flex-1 pb-16">
         <section className="pt-12 pb-8 sm:pt-16">
           <div className="font-mono text-xs font-medium tracking-[0.14em] text-muted-foreground uppercase">
             Public job boards, one employer one vote
@@ -40,7 +34,7 @@ export default async function HomePage() {
               href="#rankings-title"
               className="inline-flex h-11 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors outline-none hover:bg-primary/80 focus-visible:ring-3 focus-visible:ring-ring/50"
             >
-              Start with the live ranking
+              Start with the captured ranking
               <ArrowRight className="size-4" aria-hidden />
             </a>
             <a
@@ -53,29 +47,40 @@ export default async function HomePage() {
         </section>
 
         <section className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-4">
-          <Metric label="Roles scanned" value={market.rolesScanned.toLocaleString()} />
-          <Metric label="Companies live" value={market.companiesScanned.toLocaleString()} />
-          <Metric label="Skill markets" value={market.signals.length.toLocaleString()} />
-          <Metric label="Roles classified" value={`${coverage}%`} />
+          <Metric label="Postings scanned" value={formatCount(market.rolesScanned)} />
+          <Metric label="Employer boards" value={formatCount(market.companiesScanned)} />
+          <Metric label="Skill rows" value={formatCount(market.signals.length)} />
+          <Metric
+            label="Classified share"
+            value={formatPercentOf(market.rolesClassified, market.rolesScanned)}
+            detail={`${formatCount(market.rolesClassified)} postings`}
+          />
         </section>
 
         <section className="mt-8" aria-labelledby="rankings-title">
           <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
             <div>
               <div className="font-mono text-xs font-medium tracking-[0.14em] text-muted-foreground uppercase">
-                Live rankings
+                Captured ranking
               </div>
               <h2 id="rankings-title" className="mt-1 text-xl font-semibold tracking-tight">
-                Skills mentioned in hiring
+                Titles and teams in this job-board sample
               </h2>
             </div>
-            <div className="font-mono text-xs text-muted-foreground">Captured sample: {refreshed} UTC</div>
+            <div className="font-mono text-xs text-muted-foreground">Captured sample: {refreshed}</div>
           </div>
           <p className="mb-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            The score gives every employer board the same weight, split across the roles it posted.
-            Raw counts are postings, including the same title repeated across cities. The largest board
-            in this sample is {market.largestEmployer.name} with {market.largestEmployer.roles.toLocaleString()} roles
-            ({market.largestEmployer.shareOfRoles}% of postings).
+            The score gives every employer board the same weight, split across the postings it listed.
+            Counts are postings, including the same title repeated across cities. They are not unique
+            openings, hires, or national job growth. The largest board in this sample is{" "}
+            {market.largestEmployer.name} with {formatCount(market.largestEmployer.roles)} postings (
+            {formatPercentOf(market.largestEmployer.roles, market.rolesScanned)} of postings).
+            Occupational families match broad job titles. Named technologies count only when the title
+            or team says the tool, because requirement text was not stored. A posting can match more
+            than one row, so shares overlap. Pay is a median of disclosed annual USD salary-band
+            midpoints, pooled across locations and seniority. It is not total compensation and not a
+            market cap. Example links are short titles from the row. They are not necessarily the
+            postings that set the median.
           </p>
 
           {market.signals.length > 0 ? (
@@ -83,6 +88,7 @@ export default async function HomePage() {
               {market.signals.map((skill, index) => (
                 <li key={skill.slug} id={skill.slug} className="grid scroll-mt-4 gap-4 p-4 sm:grid-cols-[2rem_1fr_9rem] sm:p-5">
                   <div className="font-mono text-xs tabular-nums text-muted-foreground">
+                    <span className="sr-only">Rank </span>
                     {String(index + 1).padStart(2, "0")}
                   </div>
                   <div className="min-w-0">
@@ -90,24 +96,31 @@ export default async function HomePage() {
                       <h3 className="font-semibold tracking-tight">{skill.name}</h3>
                       <div className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
                         {skill.category}
+                        <span className="normal-case tracking-normal"> · {skillKind(skill.slug)}</span>
                       </div>
                     </div>
                     <div className="mt-1 text-xs text-muted-foreground">
-                      {skill.matchingRoles.toLocaleString()} matching roles across{" "}
-                      {skill.companiesHiring} {skill.companiesHiring === 1 ? "company" : "companies"}
+                      {formatCount(skill.matchingRoles)} matching postings across{" "}
+                      {formatCount(skill.companiesHiring)} {skill.companiesHiring === 1 ? "employer board" : "employer boards"}
                     </div>
                     {skill.medianDisclosedUsd !== null ? (
                       <div className="mt-1 text-xs text-muted-foreground">
                         <span className="font-medium text-foreground">
-                          {formatCompUsd(skill.medianDisclosedUsd)} median advertised annual USD
+                          {formatUsd(skill.medianDisclosedUsd)} median annual USD salary-band midpoint
                         </span>{" "}
                         <span className="font-mono text-xs">
-                          ({skill.disclosedCount} of {skill.matchingRoles} postings disclose)
+                          ({formatCount(skill.disclosedCount)} of {formatCount(skill.matchingRoles)} postings disclose,{" "}
+                          {formatPercentOf(skill.disclosedCount, skill.matchingRoles)})
                         </span>
+                        {skill.disclosedCount < SMALL_DISCLOSURE_COUNT && (
+                          <span className="mt-1 block font-sans text-xs normal-case tracking-normal">
+                            Small disclosure count. This median describes those bands only.
+                          </span>
+                        )}
                       </div>
                     ) : (
-                      <div className="mt-1 font-mono text-xs tracking-wide text-muted-foreground uppercase">
-                        no disclosed comp
+                      <div className="mt-1 text-xs text-muted-foreground">
+                        No disclosed annual USD salary band
                       </div>
                     )}
                     {skill.examples.length > 0 && (
@@ -123,6 +136,7 @@ export default async function HomePage() {
                             <span className="break-words">
                               {job.title} at {job.company}
                             </span>
+                            <span className="sr-only"> (opens in a new tab)</span>
                             <ArrowUpRight className="size-3 shrink-0" aria-hidden />
                           </a>
                         ))}
@@ -134,11 +148,11 @@ export default async function HomePage() {
                     </div>
                   </div>
                   <div className="sm:text-right">
-                    <div className="font-mono text-xl font-semibold tabular-nums text-brand">
+                    <div className="font-mono text-xl font-semibold tabular-nums text-brand" aria-label={`Employer-weighted score ${skill.demandScore} out of 100. Not percent growth and not a dollar market cap.`}>
                       {skill.demandScore}
                     </div>
                     <div className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
-                      Employer-weighted
+                      Score out of 100
                     </div>
                     <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted" aria-hidden>
                       <div
@@ -147,7 +161,7 @@ export default async function HomePage() {
                       />
                     </div>
                     <div className="mt-1 font-mono text-xs text-muted-foreground">
-                      {skill.shareOfRoles}% of roles
+                      {formatPercentOf(skill.matchingRoles, market.rolesScanned)} of postings
                     </div>
                   </div>
                 </li>
@@ -161,6 +175,8 @@ export default async function HomePage() {
           )}
         </section>
 
+        <OfficialOutlook signals={market.signals} />
+
         <section id="sectors" className="mt-8 scroll-mt-6" aria-labelledby="sectors-title">
           <div className="font-mono text-xs font-medium tracking-[0.14em] text-muted-foreground uppercase">
             Occupational mix
@@ -171,23 +187,26 @@ export default async function HomePage() {
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
             Each posting gets one sector from its title. The team is used only when the title matches
             none of the sector rules. Unspecified means the title did not match a rule, not that the
-            work has no field.
+            work has no field. Share is that sector&apos;s postings divided by postings scanned, rounded
+            to 0.1 percentage point.
           </p>
           <div className="mt-3 overflow-x-auto rounded-xl border border-border bg-card">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border text-left font-mono text-xs tracking-wide text-muted-foreground uppercase">
-                  <th className="p-3 font-medium sm:px-5">Sector</th>
-                  <th className="p-3 text-right font-medium sm:px-5">Roles</th>
-                  <th className="p-3 text-right font-medium sm:px-5">Employers</th>
+                  <th scope="col" className="p-3 font-medium sm:px-5">Sector</th>
+                  <th scope="col" className="p-3 text-right font-medium sm:px-5">Postings</th>
+                  <th scope="col" className="p-3 text-right font-medium sm:px-5">Share</th>
+                  <th scope="col" className="p-3 text-right font-medium sm:px-5">Employers</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {market.sectors.map((row) => (
                   <tr key={row.label}>
-                    <td className="p-3 font-semibold sm:px-5">{row.label}</td>
-                    <td className="p-3 text-right font-mono tabular-nums sm:px-5">{row.roles.toLocaleString()}</td>
-                    <td className="p-3 text-right font-mono tabular-nums sm:px-5">{row.companies.toLocaleString()}</td>
+                    <th scope="row" className="p-3 text-left font-semibold sm:px-5">{row.label}</th>
+                    <td className="p-3 text-right font-mono tabular-nums sm:px-5">{formatCount(row.roles)}</td>
+                    <td className="p-3 text-right font-mono tabular-nums sm:px-5">{formatPercentOf(row.roles, market.rolesScanned)}</td>
+                    <td className="p-3 text-right font-mono tabular-nums sm:px-5">{formatCount(row.companies)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -205,28 +224,47 @@ export default async function HomePage() {
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
             A country is recorded only when the posting names one, or names a US postal abbreviation
             or Canadian province. A city alone stays Unspecified. Boards in more than one country are
-            Multiple. This is not a headquarters map.
+            Multiple. This is not a headquarters map, and the ranking above is not limited to the
+            United States. Showing 12 of {formatCount(market.countries.length)} country rows, ordered
+            by postings.
           </p>
           <div className="mt-3 overflow-x-auto rounded-xl border border-border bg-card">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border text-left font-mono text-xs tracking-wide text-muted-foreground uppercase">
-                  <th className="p-3 font-medium sm:px-5">Country</th>
-                  <th className="p-3 text-right font-medium sm:px-5">Roles</th>
-                  <th className="p-3 text-right font-medium sm:px-5">Employers</th>
+                  <th scope="col" className="p-3 font-medium sm:px-5">Country</th>
+                  <th scope="col" className="p-3 text-right font-medium sm:px-5">Postings</th>
+                  <th scope="col" className="p-3 text-right font-medium sm:px-5">Employers</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {market.countries.slice(0, 12).map((row) => (
                   <tr key={row.label}>
-                    <td className="p-3 font-semibold sm:px-5">{row.label}</td>
-                    <td className="p-3 text-right font-mono tabular-nums sm:px-5">{row.roles.toLocaleString()}</td>
-                    <td className="p-3 text-right font-mono tabular-nums sm:px-5">{row.companies.toLocaleString()}</td>
+                    <th scope="row" className="p-3 text-left font-semibold sm:px-5">{row.label}</th>
+                    <td className="p-3 text-right font-mono tabular-nums sm:px-5">{formatCount(row.roles)}</td>
+                    <td className="p-3 text-right font-mono tabular-nums sm:px-5">{formatCount(row.companies)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          {market.countries.length > 12 && (
+            <details className="mt-3 rounded-xl border border-border bg-card p-4">
+              <summary className="cursor-pointer text-sm font-medium">
+                Show the other {formatCount(market.countries.length - 12)} country rows
+              </summary>
+              <ul className="mt-3 space-y-1 text-sm">
+                {market.countries.slice(12).map((row) => (
+                  <li key={row.label} className="flex items-baseline justify-between gap-3">
+                    <span>{row.label}</span>
+                    <span className="font-mono text-xs tabular-nums text-muted-foreground">
+                      {formatCount(row.roles)} postings, {formatCount(row.companies)} employers
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          )}
         </section>
 
         <section id="h1b-levels" className="mt-8 scroll-mt-6" aria-labelledby="h1b-title">
@@ -234,12 +272,16 @@ export default async function HomePage() {
             Pay floors by level
           </div>
           <h2 id="h1b-title" className="mt-1 text-xl font-semibold tracking-tight">
-            What these employers legally committed to pay H-1B hires
+            H-1B minimum base pay for seven named employers
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
             Median filed minimum base salary by government wage level, from{" "}
-            {H1B_SNAPSHOT.filings} certified H-1B filings by {H1B_SNAPSHOT.companies.join(", ")}{" "}
-            ({H1B_SNAPSHOT.window}). Level I is entry, level IV is fully competent and senior.
+            {formatCount(H1B_SNAPSHOT.filings)} certified H-1B filings by {H1B_SNAPSHOT.companies.join(", ")}{" "}
+            ({H1B_SNAPSHOT.window}). This is the original nine-employer cohort, not the{" "}
+            {formatCount(market.companiesScanned)} boards in the ranking. Level I is entry, level IV is
+            fully competent and senior. The dollars are exact filed floors, not rounded to the nearest thousand.
+            A cell with fewer than {SMALL_DISCLOSURE_COUNT} filings is marked a small filing count. That
+            mark is a display label, not a confidence interval.
           </p>
           <div className="mt-3 overflow-x-auto rounded-xl border border-border bg-card">
             <table className="w-full text-sm">
@@ -256,15 +298,19 @@ export default async function HomePage() {
                     <td className="p-3 font-semibold whitespace-nowrap sm:px-5">Level {row.level}</td>
                     <td className="p-3 text-right sm:px-5">
                       <div className="font-mono font-semibold tabular-nums text-brand">
-                        {formatCompUsd(row.medianFloorUsd)}
+                        {formatUsd(row.medianFloorUsd)}
                       </div>
-                      <div className="font-mono text-xs whitespace-nowrap text-muted-foreground">{row.filings} filings</div>
+                      <div className="font-mono text-xs whitespace-nowrap text-muted-foreground">
+                        {formatCount(row.filings)} filings{row.filings < SMALL_DISCLOSURE_COUNT ? ". Small filing count." : ""}
+                      </div>
                     </td>
                     <td className="p-3 text-right sm:px-5">
                       <div className="font-mono font-semibold tabular-nums text-brand">
-                        {formatCompUsd(row.softwareMedianFloorUsd)}
+                        {formatUsd(row.softwareMedianFloorUsd)}
                       </div>
-                      <div className="font-mono text-xs whitespace-nowrap text-muted-foreground">{row.softwareFilings} filings</div>
+                      <div className="font-mono text-xs whitespace-nowrap text-muted-foreground">
+                        {formatCount(row.softwareFilings)} filings{row.softwareFilings < SMALL_DISCLOSURE_COUNT ? ". Small filing count." : ""}
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -297,7 +343,8 @@ export default async function HomePage() {
                 This capture reads public job-board APIs from Greenhouse, Ashby, Lever, Workable,
                 Recruitee, Personio, and Rippling. Candidate board addresses come from the{" "}
                 <a href={market.sample.directoryUrl} className="font-medium text-brand underline underline-offset-4">public job-board directory</a>
-                , and every count on this page was recomputed from a fresh response.{" "}
+                . Counts were computed from those board responses at capture time. This page serves
+                that completed sample. It does not refetch every board on each visit.{" "}
                 {market.sample.attempted.toLocaleString()} boards were called.{" "}
                 {market.sample.failed.toLocaleString()} failed and {market.sample.empty.toLocaleString()} listed
                 no roles. Those boards are omitted. They are not scored as zero demand.{" "}
@@ -318,20 +365,28 @@ export default async function HomePage() {
                 that publish on these applicant-tracking systems, not the whole labor market.
               </p>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Pay values are medians of employer-disclosed annual USD salary-band midpoints. Ashby
-                structured bands and Lever year ranges in USD are eligible. The Greenhouse list endpoint
-                has no salary field, and this capture does not download description HTML to recover one.
-                Skills with no usable band show no number. Ambiguous currencies, hourly rates, and
-                incomplete ranges are left out. These figures describe roles in a skill family, not the
-                standalone price of a skill. {market.sample.slugNamedCompanies.toLocaleString()} employer
-                labels are title-cased board slugs because that API did not return a company name.
+                Pay values are medians of employer-disclosed annual USD salary-band midpoints. In this
+                capture those bands come from Ashby structured salary components, Lever year ranges in
+                USD, and Recruitee salary objects whose period says year or annual. Greenhouse,
+                Workable, Rippling, and Personio list rows contributed no kept salary. The Greenhouse
+                list endpoint has no salary field, and this capture does not download description HTML
+                to recover one. Skills with no usable band show no number. Ambiguous currencies, hourly
+                rates, and incomplete ranges are left out. Even counts use the rounded mean of the two
+                central midpoints. A row with fewer than {SMALL_DISCLOSURE_COUNT} disclosed bands is
+                marked a small disclosure count. That mark is a display label, not a confidence interval.
+                These figures describe postings in a title family, pooled across countries and seniority.
+                They are not base-versus-total compensation, not a city wage, and not the standalone
+                price of a skill. {formatCount(market.sample.slugNamedCompanies)} employer labels are
+                title-cased board slugs because that API did not return a company name.
               </p>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Not in this ranking: SmartRecruiters, levels.fyi, and statistical series from BLS, O*NET,
-                OECD, ILO, Eurostat, and the UK ONS. Several of those need an API key or forbid automated
-                collection, and the occupation surveys are not company job boards. They are follow-ups,
-                not hidden inputs. The H-1B table below is a separate fixed snapshot for the original
-                nine employers. No trend series is published.
+                The score does not use SmartRecruiters, levels.fyi, or statistical series from BLS, O*NET,
+                OECD, ILO, Eurostat, and the UK ONS. The United States projection section above quotes
+                BLS pages directly. Those figures are not inputs to the score, and the score is not
+                national job growth. The H-1B table above is a separate fixed snapshot for the original
+                nine employers. No trend series is published. Posting share on each row is matching
+                postings divided by postings scanned, rounded to 0.1 percentage point. The stored whole
+                percent is not what the page prints, because that rounding hid rows under 0.5%.
               </p>
               <a href="/data" className="mt-2 inline-flex min-h-11 items-center rounded text-sm font-medium text-brand underline underline-offset-4">Inspect data sources and capture history</a>
             </div>
@@ -341,7 +396,7 @@ export default async function HomePage() {
         <section className="mt-10 flex flex-col gap-4 rounded-xl border border-border bg-card p-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="font-mono text-xs font-medium tracking-[0.14em] text-muted-foreground uppercase">
-              Your market cap
+              From the ranking to proof
             </div>
             <h2 className="mt-1 text-lg font-semibold tracking-tight">
               Demand only matters when you can prove the skill.
@@ -367,17 +422,21 @@ export default async function HomePage() {
   );
 }
 
-function formatCompUsd(value: number): string {
-  return `$${Math.round(value / 1000)}K`;
-}
-
-function Metric({ label, value }: { label: string; value: string }) {
+function Metric({ label, value, detail }: { label: string; value: string; detail?: string }) {
   return (
     <div className="bg-card p-4">
       <div className="font-mono text-xs tracking-wide text-muted-foreground uppercase">{label}</div>
       <div className="mt-1 font-mono text-lg font-semibold tabular-nums text-brand">{value}</div>
+      {detail && <div className="mt-1 text-xs text-muted-foreground">{detail}</div>}
     </div>
   );
+}
+
+function skillKind(slug: string): string {
+  const source = SKILLS.find((skill) => skill.slug === slug)?.source;
+  if (source === "technical-requirements") return "Named technology";
+  if (source === "role") return "Occupational family";
+  return "Unclassified pattern";
 }
 
 // Every link into skill.supply carries where it came from, so the shared
